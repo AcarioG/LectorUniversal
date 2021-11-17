@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Books\" />
     <Folder Include="Repository\" />
   </ItemGroup>
 
