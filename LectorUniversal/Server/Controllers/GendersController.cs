@@ -7,21 +7,27 @@ namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class GendersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
 
-        public BooksController(ApplicationDbContext db)
+        public GendersController(ApplicationDbContext db)
         {
             _db = db;
         }
-       
+
+        //[HttpGet]
+        //public async Task<IActionResult> Get();
+        //{
+            
+        //}
+
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Book book)
+        public async Task<ActionResult<int>> Post(Gender gender)
         {
-            _db.Add(book);
+            _db.Add(gender);
             await _db.SaveChangesAsync();
-            return Ok(book);
+            return gender.Id;
         }
     }
 }

@@ -1,7 +1,76 @@
 ﻿@page "/books/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+
 
 <h3>Create</h3>
 
+
+<EditForm Model="Book" OnSubmit="CreateBook">
+    <div class="form-group">
+        <label>Titulo:</label>
+        <div>
+            <InputText class=form-control @bind-Value=@Book.Name></InputText>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Type:</label>
+        <div>
+            @*<input class="form-control" @bind-value="@Book.TypeofBook"></input>*@
+            <InputSelect class="form-control" @bind-Value="@Book.TypeofBook">
+                @foreach (var types in Enum.GetValues(typeof(BoBookTypes)))
+               {
+                   <option value="@types">@types</option>
+               }
+            </InputSelect>
+        </div>
+    </div>
+    <div class="form-control">
+        <InputImages Label="Cover" ImageSelected="ImageSelected" ImageTemp="" />
+    </div>
+    <div class="form-group">
+        <label>Editorial:</label>
+        <div>
+            <InputText class=form-control @bind-Value=@Book.Editorial></InputText>
+        </div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Submit</button>
+</EditForm>
+
+
 @code {
+    private Book Book = new Book();
+    private string ImageTemp;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(Book.Cover))
+        {
+            ImageTemp = Book.Cover;
+            Book.Cover = null;  
+        }
+    }
+
+    private async Task CreateBook()
+    {
+        var httpResponse = await repository.Post("api/books", Book);
+
+        if (httpResponse.Error)
+        {
+            var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
+            Console.WriteLine(body);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/books");
+        }
+
+    }
+
+    private void ImageSelected(string ImageBase64)
+    {
+        Book.Cover = ImageBase64;
+    }
 
 }

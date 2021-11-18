@@ -1,0 +1,36 @@
+﻿@page "/genders/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+
+<h3>Create</h3>
+
+<EditForm Model="Gender" OnSubmit="Create">
+    <div class="form-group">
+        <label>Nombre:</label>
+        <div>
+            <InputText class="form=control" @bind-Value="@Gender.Name"/>
+        </div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Gender Gender = new Gender();
+
+    private async Task Create()
+    {
+        var httpResponse = await repository.Post("api/genders", Gender);
+
+        if (httpResponse.Error)
+        {
+            var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
+            Console.WriteLine(body);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/");
+        }
+
+    }
+}
