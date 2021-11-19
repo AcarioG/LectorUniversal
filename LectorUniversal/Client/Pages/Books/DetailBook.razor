@@ -1,0 +1,44 @@
+﻿@page "/books/{Id:int}"
+@inject IRepository repository
+@inject NavigationManager navigateManager
+
+<h3>DetailBook</h3>
+
+
+@if (model == null)
+{
+    <p>Cargando..</p>
+}
+else
+{
+    <h2>@model.Book.Name</h2>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [Parameter] public string BookName { get; set; }
+    private VisualiseBookDTO model;
+
+    protected async override void OnInitialized()
+    {
+        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigateManager.NavigateTo("");
+            }
+            //else
+            //{
+            //    var ErrorMensaje = await responseHttp.GetBody();
+        //}
+        }
+        else
+        {
+            model = responseHttp.Response;
+        }
+
+    }
+
+}

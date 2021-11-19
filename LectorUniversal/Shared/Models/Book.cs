@@ -9,6 +9,7 @@
         public string? Cover { get; set; }
         public string? Editorial { get; set; }
         public virtual List<Chapter>? Chapters { get; set; }
+        public List<BooksGender> Genders { get; set; } = new List<BooksGender>();
     }
 
     public enum BoBookTypes

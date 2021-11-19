@@ -2,6 +2,8 @@ using Azure.Storage.Blobs;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
 using LectorUniversal.Server.Models;
+using LectorUniversal.Shared;
+using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,16 @@ builder.Services.AddIdentityServer()
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
+
+builder.Services.AddMvc().AddJsonOptions(op => 
+    op.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddAutoMapper(conf =>
+{
+    conf.CreateMap<Book, BooksDTO>();
+    conf.CreateMap<Chapter, ChapterDTO>();
+    conf.CreateMap<Page, PageDTO>();
+});//,typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
