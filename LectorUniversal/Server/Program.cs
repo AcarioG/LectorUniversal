@@ -1,4 +1,6 @@
+using Azure.Storage.Blobs;
 using LectorUniversal.Server.Data;
+using LectorUniversal.Server.Helpers;
 using LectorUniversal.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -8,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("LectorUniversal");
+var AzureStorageCS = builder.Configuration.GetConnectionString("AzureStorage");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -20,6 +23,9 @@ builder.Services.AddIdentityServer()
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
+
+builder.Services.AddScoped<IFileUpload, FileUpload>();
+builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

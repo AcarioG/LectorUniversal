@@ -2,6 +2,7 @@
 using LectorUniversal.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LectorUniversal.Server.Controllers
 {
@@ -14,6 +15,12 @@ namespace LectorUniversal.Server.Controllers
         public BooksController(ApplicationDbContext db)
         {
             _db = db;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Book>>> Get()
+        {
+            return await _db.Books.ToListAsync();
         }
        
         [HttpPost]

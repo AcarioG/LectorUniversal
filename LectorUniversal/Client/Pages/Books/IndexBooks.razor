@@ -1,0 +1,41 @@
+﻿@page "/books"
+@inject IRepository repository
+
+<h3>ListBooks</h3>
+
+<div class="form-group">
+    <a class="btn btn-success" href="books/create">Agregar Libro</a>
+</div>
+
+@if (Books == null)
+{
+    <p>Cargando......</p>
+}
+else
+{
+<div class="card-deck">
+    @foreach (var book in Books)
+    {
+        <div class="card">
+            @*<img class="card-img-top" src="..." alt="Card image cap">*@
+            <div class="card-body">
+                <h5 class="card-title">@book.Name</h5>
+                @*<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>*@
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </div>
+    }
+</div>
+    }
+
+@code {
+
+    public List<Book> Books {get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        var reponseHttp = await repository.Get<List<Book>>("api/books");
+        Books = reponseHttp.Response; 
+    }
+}
