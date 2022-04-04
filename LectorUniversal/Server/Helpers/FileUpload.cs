@@ -1,15 +1,16 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace LectorUniversal.Server.Helpers
 {
     public class FileUpload : IFileUpload
     {
-        private readonly string db;
-        private string comicContainer = "comics";
-        private string mangasContainer = "mangas";
-        public FileUpload(IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        private readonly BlobServiceClient _blobServiceClient;
+        public FileUpload(IConfiguration Configuration, BlobServiceClient blobServiceClient)
         {
-            db = configuration.GetConnectionString("AzureStorage");
+            _configuration = Configuration;
+            _blobServiceClient = blobServiceClient;
         }
 
         public async Task DeleteFile(string Folder, string ImgUrl)
@@ -22,9 +23,31 @@ namespace LectorUniversal.Server.Helpers
             throw new NotImplementedException();
         }
 
-        public Task<string> SaveFile(byte[] content, string extention, string Folder)
+        public async Task<string> SaveFile(byte[] content, string extention, string Folder)
         {
-            throw new NotImplementedException();
+            HttpClient _httpClient = new HttpClient();
+
+            var container = await _httpClient.PostAsJsonAsync("api/Container", Folder);
+
+            container.ToString();
+            return "";
+            //var account = CloudStorageAccount.Parse(db);
+            //var Client = account.CreateCloudBlobClient();
+            //var folder = Client.GetContainerReference(Folder);
+            //await folder.CreateIfNotExistsAsync();
+            //await folder.SetPermissionsAsync(new BlobContainerPermissions
+            //{
+            //    PublicAccess = BlobContainerPublicAccessType.Blob
+            //});
+
+
+            //var FileName = $"{Guid.NewGuid()}.{extention}";
+            //var blob = await containerClient.UploadBlobAsync(FileName, new MemoryStream(content));
+            //return blob.Value
+            //var blob = folder.GetBlockBlobReference(FileName);
+            //await blob.UploadFromByteArrayAsync(content, 0, content.Length);c
+            //return blob.Uri.ToString();
         }
+
     }
 }

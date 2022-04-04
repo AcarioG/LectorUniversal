@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("LectorUniversal");
-var AzureStorageCS = builder.Configuration.GetConnectionString("AzureStorage");
+//var AzureStorageCS = builder.Configuration.GetConnectionString("AzureStorage");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -31,7 +31,7 @@ builder.Services.AddMvc().AddJsonOptions(op =>
 
 builder.Services.AddAutoMapper(conf =>
 {
-    conf.CreateMap<Book, BooksDTO>();
+    conf.CreateMap<Book, BooksDTO>().ReverseMap();
     conf.CreateMap<Chapter, ChapterDTO>();
     conf.CreateMap<Page, PageDTO>();
 });//,typeof(StartupBase));

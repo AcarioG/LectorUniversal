@@ -2,18 +2,19 @@
 @using Tewr.Blazor.FileReader
 @inject IFileReaderService fileReaderService
 
-<div>
+<div class="col-md-4">
     <label>@Label</label>
     <div>
-        <input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png" />
+        <input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png" multiple/>
     </div>
 </div>
-<div>
+
+<div class="flex-wrap">
     @if (ImageBase64 != null)
     {
         <div>
             <div style="margin:10px;">
-                <img src="@ImageTemp" style="width:400px;" />
+                <img src="data:image/jpeg;base64,@ImageBase64" style="width:150px;" />
             </div>
         </div>
     }
@@ -21,7 +22,7 @@
    {
        <div>
             <div style="margin:10px;">
-                <img src="@ImageTemp" style="width:400px;" />
+                <img src="@ImageTemp" style="width:150px;" />
             </div>
         </div>
    }
@@ -45,7 +46,7 @@
                 ImageBase64 = Convert.ToBase64String(bytesImage);
                 await ImageSelected.InvokeAsync(ImageBase64);
                 ImageTemp = null;
-                StateHasChanged();
+               // StateHasChanged();
             }
         }
     }
