@@ -29,8 +29,7 @@ namespace LectorUniversal.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
         {
-            var Book = await _db.Books.Where(x => x.Id == id).
-                Include(x => x.Genders).ThenInclude(x => x.Gender).FirstOrDefaultAsync();
+            var Book = await _db.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
 
             if (Book == null)
             {
@@ -53,16 +52,20 @@ namespace LectorUniversal.Server.Controllers
         }
        
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromBody]Book book )
+        public async Task<ActionResult<int>> Post([FromForm]Book book )
         {
-            if (!string.IsNullOrWhiteSpace(book.Cover))
+            if (book.TypeofBook == BoBookTypes.bobt_comic)
             {
-                var coverPoster = Convert.FromBase64String(book.Cover);
-                string folder = book.Name.ToLower().Trim();
-                book.Cover = _fileUpload.SaveFile(coverPoster, "jpg", folder).ToString();
+                if (!string.IsNullOrWhiteSpace(book.Cover))
+                {
+                    string folder = $"Comics/{book.Name}";
+                    var coverPoster = Convert.FromBase64String(book.Cover);
+                    book.Cover = _fileUpload.SaveFile(coverPoster, "jpg", folder).ToString();
+
+                }
             }
             _db.Add(book);
-            await _db.SaveChangesAsync();
+            //await _db.SaveChangesAsync();
             return Ok(book);
         }
     }

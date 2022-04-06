@@ -30,9 +30,9 @@
 
 @code {
     [Parameter] public string Label { get; set; } = "Image";
-    [Parameter] public string ImageTemp { get; set; }
+    [Parameter] public string? ImageTemp { get; set; }
     [Parameter] public EventCallback<string> ImageSelected { get; set; }
-    private string ImageBase64;
+    private string? ImageBase64;
     ElementReference inputElement;
 
     async Task ImageFileSelected()
@@ -46,7 +46,7 @@
                 ImageBase64 = Convert.ToBase64String(bytesImage);
                 await ImageSelected.InvokeAsync(ImageBase64);
                 ImageTemp = null;
-               // StateHasChanged();
+                StateHasChanged();
             }
         }
     }

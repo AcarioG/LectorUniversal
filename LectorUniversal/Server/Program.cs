@@ -37,7 +37,8 @@ builder.Services.AddAutoMapper(conf =>
 });//,typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
-builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
+//builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
+//builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

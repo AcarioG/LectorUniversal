@@ -5,48 +5,53 @@ namespace LectorUniversal.Server.Helpers
 {
     public class FileUpload : IFileUpload
     {
-        private readonly IConfiguration _configuration;
-        private readonly BlobServiceClient _blobServiceClient;
-        public FileUpload(IConfiguration Configuration, BlobServiceClient blobServiceClient)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly HttpContextAccessor _contextAccessor;
+        public FileUpload(IWebHostEnvironment webHostEnvironment, HttpContextAccessor httpContextAccessor)
         {
-            _configuration = Configuration;
-            _blobServiceClient = blobServiceClient;
+            _webHostEnvironment = webHostEnvironment;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public async Task DeleteFile(string Folder, string ImgUrl)
+        public Task DeleteFile(string Folder, string ImgUrl)
         {
-            throw new NotImplementedException();
+            var filename = Path.GetFileName(ImgUrl);
+            string directory = Path.Combine(_webHostEnvironment.WebRootPath, Folder, filename);
+
+            if (File.Exists(directory))
+            {
+                File.Delete(directory);
+            }
+
+            return Task.FromResult(0);
         }
 
-        public Task<string> EditFile(byte[] content, string extention, string Folder, string ImgUrl)
+        public async Task<string> EditFile(byte[] content, string extention, string Folder, string ImgUrl)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(ImgUrl))
+            {
+                await DeleteFile(ImgUrl, Folder);
+            }
+
+            return await SaveFile(content, extention, Folder);
         }
 
         public async Task<string> SaveFile(byte[] content, string extention, string Folder)
         {
-            HttpClient _httpClient = new HttpClient();
+            var fileName = $"{Guid.NewGuid()}.{extention}";
+            string Container = Path.Combine(_webHostEnvironment.WebRootPath, Folder);
 
-            var container = await _httpClient.PostAsJsonAsync("api/Container", Folder);
+            if (!Directory.Exists(Container))
+            {
+                Directory.CreateDirectory(Container);
+            }
 
-            container.ToString();
-            return "";
-            //var account = CloudStorageAccount.Parse(db);
-            //var Client = account.CreateCloudBlobClient();
-            //var folder = Client.GetContainerReference(Folder);
-            //await folder.CreateIfNotExistsAsync();
-            //await folder.SetPermissionsAsync(new BlobContainerPermissions
-            //{
-            //    PublicAccess = BlobContainerPublicAccessType.Blob
-            //});
+            string path = Path.Combine(Container, fileName);
+            await File.WriteAllBytesAsync(path, content);
 
-
-            //var FileName = $"{Guid.NewGuid()}.{extention}";
-            //var blob = await containerClient.UploadBlobAsync(FileName, new MemoryStream(content));
-            //return blob.Value
-            //var blob = folder.GetBlockBlobReference(FileName);
-            //await blob.UploadFromByteArrayAsync(content, 0, content.Length);c
-            //return blob.Uri.ToString();
+            var url = $"{_contextAccessor.HttpContext?.Request.Scheme}://{_contextAccessor.HttpContext?.Request.Host}";
+            var dbPathUrl = Path.Combine(url, Folder, fileName);
+            return dbPathUrl;
         }
 
     }
