@@ -1,0 +1,23 @@
+﻿@page "/chapter/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+
+<ChapterForm OnValidSubmit="CreateChapter" Chapter="Chapter" />
+@code {
+    private Chapter Chapter = new Chapter();
+
+    private async Task CreateChapter()
+    {
+        var httpResponse = await repository.Post<Chapter, int>("api/chparters", Chapter);
+
+        if (httpResponse.Error)
+        {
+            var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
+            Console.WriteLine(body);
+        }
+        else
+        {
+            var bookId = httpResponse.Response;
+        }
+    }
+}

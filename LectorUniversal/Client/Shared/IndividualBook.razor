@@ -1,21 +1,22 @@
-﻿<a href="@urlBook">
-    <div class="card">
+﻿<div>
+    <div class="card" style="width:230px;">
+        <a href="@urlBook">
         <img class="card-img-top" src="@Books.Cover.ToString()">
         <div class="card-body">
             <h5 class="card-title">@Books.Name</h5>
-            
         </div>
+        </a>
         <div class="card-footer">
             <small class="text-muted">Last updated 3 mins ago</small>
         </div>
     </div>
-</a>
+
  <a class="btn btn-info" href="books/edit/@Books.Id">Edit</a>
-    <button type="button" class="btn btn-danger"
+    <button type="button" class="btn btn-danger align-bottom:center"
             @onclick="@(() => DeleteBook.InvokeAsync(Books))">
         Borrar
     </button>
-
+</div>
 
 @code {
     [Parameter] public Book Books { get; set; }

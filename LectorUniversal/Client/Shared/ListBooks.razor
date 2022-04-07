@@ -1,10 +1,9 @@
 ﻿@inject IJSRuntime js
 
-<h3>ListBooks</h3>
 <div style="display: flex; flex-wrap: wrap; align-items:center;">
     <GenericList Lists="Books">
-        <RecordFound >
-            <IndividualBook Book="book" DeleteBook="DeleteBook" />
+        <RecordFound Context="book" >
+            <IndividualBook Books="book" DeleteBook="DeleteBook" />
         </RecordFound>
     </GenericList>
 </div>

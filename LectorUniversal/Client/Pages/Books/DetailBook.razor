@@ -4,8 +4,6 @@
 @inject NavigationManager navigateManager
 @inject IShowMessages showMessages
 
-<h3>DetailBook</h3>
-
 
 @if (model == null)
 {
@@ -14,7 +12,20 @@
 else
 {
     <h2>@model.Book.Name</h2>
-    <img src="@model.Book.Cover">
+    <div>
+        <img src="@model.Book.Cover" width="250"/>
+    </div>
+    <div class="col-md-6">
+        <br/>
+        <a href="/chapter/create" class="btn btn-success">Agregar Capitulo</a>
+        <br/>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <span class="badge">14</span>
+            Cras justo odio
+          </li>
+        </ul>
+    </div>
 }
 
 @code {

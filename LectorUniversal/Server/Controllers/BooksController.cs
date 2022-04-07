@@ -58,11 +58,9 @@ namespace LectorUniversal.Server.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(book.Cover))
                 {
-
                     string folder = $"Comics/{book.Name.Replace(" ","")}";
                     var coverPoster = Convert.FromBase64String(book.Cover);
                     book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg", folder);
-
                 }
             }
             _db.Add(book);

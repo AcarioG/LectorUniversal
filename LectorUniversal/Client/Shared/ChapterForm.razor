@@ -1,0 +1,21 @@
+﻿<EditForm Model="Chapter" OnSubmit="OnValidSubmit">
+    <div class="col-md-5">
+        <div class="form-group col-md-5">
+            <label>Nombre de capitulo:</label>
+            <div>
+                <InputText class=form-control @bind-Value=@Chapter.Title></InputText>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public Chapter Chapter {  get;  set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        
+    }
+}

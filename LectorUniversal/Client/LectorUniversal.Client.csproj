@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Shared\LectorUniversal.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Chapters\" />
-  </ItemGroup>
-
 </Project>
