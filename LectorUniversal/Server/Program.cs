@@ -34,11 +34,11 @@ builder.Services.AddAutoMapper(conf =>
     conf.CreateMap<Book, BooksDTO>().ReverseMap();
     conf.CreateMap<Chapter, ChapterDTO>();
     conf.CreateMap<Page, PageDTO>();
-});//,typeof(StartupBase));
+},typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 //builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
-//builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

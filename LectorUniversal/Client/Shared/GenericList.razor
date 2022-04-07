@@ -1,0 +1,46 @@
+﻿@typeparam Titem
+
+@if(Lists == null)
+{
+    @if (Loading == null)
+    {
+        <text> Loading...</text>
+    }
+    else
+    {
+        @Loading
+    }
+}
+else if(Lists.Count == 0)
+{
+    @if(NoRecords == null)
+    {
+        <text>No hay registros para mostrar</text>
+    }
+    else
+    {
+        @NoRecords
+    }
+}
+else
+{
+    if (RecordFound != null)
+    {
+        foreach (var item in Lists)
+        {
+            @RecordFound(item)
+        }
+    }
+    else
+    {
+        @CompleteRecordsFound
+    }
+}
+
+@code {
+    [Parameter] public RenderFragment Loading { get; set; }
+    [Parameter] public RenderFragment NoRecords { get; set; }
+    [Parameter] public RenderFragment<Titem> RecordFound { get; set; }
+    [Parameter] public RenderFragment CompleteRecordsFound { get; set; }
+    [Parameter] public List<Titem> Lists { get; set; }
+}

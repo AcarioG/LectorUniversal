@@ -1,4 +1,5 @@
-﻿@page "/books"
+﻿@page "/"
+@page "/books"
 @inject IRepository repository
 
 <h3>ListBooks</h3>
@@ -7,23 +8,14 @@
     <a class="btn btn-success" href="books/create">Agregar Libro</a>
 </div>
 
-@if (Books == null)
-{
-    <p>Cargando......</p>
-}
-else
-{
-<div class="card-deck d-flex flex-row">
-    @foreach (var book in Books)
-    {
-        <IndividualBook Book="book" />
-    }
+<div>
+    <ListBooks Books="Books"/>
 </div>
-    }
 
 @code {
 
     public List<Book> Books {get; set; }
+
     protected async override Task OnInitializedAsync()
     {
         var reponseHttp = await repository.Get<List<Book>>("api/books");

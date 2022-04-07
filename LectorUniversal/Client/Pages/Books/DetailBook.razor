@@ -2,6 +2,7 @@
 @page "/books/{Id:int}/{BookName}"
 @inject IRepository repository
 @inject NavigationManager navigateManager
+@inject IShowMessages showMessages
 
 <h3>DetailBook</h3>
 
@@ -12,7 +13,8 @@
 }
 else
 {
-    <h2>@model.Book.Id</h2>
+    <h2>@model.Book.Name</h2>
+    <img src="@model.Book.Cover">
 }
 
 @code {
@@ -20,7 +22,7 @@ else
     [Parameter] public string BookName { get; set; }
     private VisualiseBookDTO model;
 
-    protected async override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
         var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}");
 
@@ -30,10 +32,11 @@ else
             {
                 navigateManager.NavigateTo("");
             }
-            //else
-            //{
-            //    var ErrorMensaje = await responseHttp.GetBody();
-        //}
+            else
+            {
+                var ErrorMensaje = await responseHttp.GetBody();
+                await showMessages.ShowErrorMessage(ErrorMensaje);
+            }
         }
         else
         {

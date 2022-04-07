@@ -1,0 +1,24 @@
+﻿@inject IJSRuntime js
+
+<h3>ListBooks</h3>
+<div style="display: flex; flex-wrap: wrap; align-items:center;">
+    <GenericList Lists="Books">
+        <RecordFound >
+            <IndividualBook Book="book" DeleteBook="DeleteBook" />
+        </RecordFound>
+    </GenericList>
+</div>
+
+@code {
+    [Parameter] public List<Book> Books { get; set; }
+
+    async Task DeleteBook(Book book)
+    {
+        bool confirm = await js.InvokeAsync<bool>($"¿Desea borrar la película {book.Name}?");
+        if (confirm)
+        {
+            Books.Remove(book);
+            Console.WriteLine($"Se ha eliminado la pelicula {book.Name}");
+        }
+    }
+}

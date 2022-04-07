@@ -12,7 +12,7 @@ namespace LectorUniversal.Shared.DTOs
         public int Id { get; set; }
         public BoBookTypes TypeofBook { get; set; }
         public string? Name { get; set; }
-        public IFormFile? Cover { get; set; }
+        public string? Cover { get; set; }
         public string? Editorial { get; set; }
         public virtual List<ChapterDTO>? Chapters { get; set; }
         //public virtual List<BookGendersDTO>? BookGenders { get; set; }

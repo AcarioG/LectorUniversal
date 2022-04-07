@@ -52,20 +52,21 @@ namespace LectorUniversal.Server.Controllers
         }
        
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromForm]Book book )
+        public async Task<ActionResult<int>> Post([FromBody]Book book )
         {
             if (book.TypeofBook == BoBookTypes.bobt_comic)
             {
                 if (!string.IsNullOrWhiteSpace(book.Cover))
                 {
-                    string folder = $"Comics/{book.Name}";
+
+                    string folder = $"Comics/{book.Name.Replace(" ","")}";
                     var coverPoster = Convert.FromBase64String(book.Cover);
-                    book.Cover = _fileUpload.SaveFile(coverPoster, "jpg", folder).ToString();
+                    book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg", folder);
 
                 }
             }
             _db.Add(book);
-            //await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
             return Ok(book);
         }
     }

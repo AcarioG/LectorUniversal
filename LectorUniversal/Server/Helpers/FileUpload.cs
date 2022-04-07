@@ -6,8 +6,8 @@ namespace LectorUniversal.Server.Helpers
     public class FileUpload : IFileUpload
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly HttpContextAccessor _contextAccessor;
-        public FileUpload(IWebHostEnvironment webHostEnvironment, HttpContextAccessor httpContextAccessor)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public FileUpload(IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _webHostEnvironment = webHostEnvironment;
             _contextAccessor = httpContextAccessor;
@@ -39,7 +39,14 @@ namespace LectorUniversal.Server.Helpers
         public async Task<string> SaveFile(byte[] content, string extention, string Folder)
         {
             var fileName = $"{Guid.NewGuid()}.{extention}";
-            string Container = Path.Combine(_webHostEnvironment.WebRootPath, Folder);
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+            if (string.IsNullOrEmpty(wwwRootPath))
+            {
+                throw new Exception();
+            }
+
+            string Container = Path.Combine(wwwRootPath, Folder).Replace(" ", "");
 
             if (!Directory.Exists(Container))
             {
@@ -50,7 +57,7 @@ namespace LectorUniversal.Server.Helpers
             await File.WriteAllBytesAsync(path, content);
 
             var url = $"{_contextAccessor.HttpContext?.Request.Scheme}://{_contextAccessor.HttpContext?.Request.Host}";
-            var dbPathUrl = Path.Combine(url, Folder, fileName);
+            var dbPathUrl = Path.Combine(url, Folder, fileName).Replace("\\","/");
             return dbPathUrl;
         }
 

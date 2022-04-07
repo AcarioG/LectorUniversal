@@ -1,24 +1,30 @@
 ﻿<a href="@urlBook">
     <div class="card">
-        @*<img class="card-img-top" src="..." alt="Card image cap">*@
+        <img class="card-img-top" src="@Books.Cover.ToString()">
         <div class="card-body">
-            <h5 class="card-title">@Book.Name</h5>
+            <h5 class="card-title">@Books.Name</h5>
             
-            @*<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>*@
         </div>
         <div class="card-footer">
             <small class="text-muted">Last updated 3 mins ago</small>
         </div>
     </div>
 </a>
+ <a class="btn btn-info" href="books/edit/@Books.Id">Edit</a>
+    <button type="button" class="btn btn-danger"
+            @onclick="@(() => DeleteBook.InvokeAsync(Books))">
+        Borrar
+    </button>
 
 
 @code {
-    [Parameter] public Book Book { get; set; }
+    [Parameter] public Book Books { get; set; }
+    [Parameter] public bool ShowButtons { get; set; } = false;
+    [Parameter] public EventCallback<Book> DeleteBook { get; set; }
     private string urlBook = string.Empty;
 
     protected override void OnInitialized()
     {
-        urlBook = $"/books/{Book?.Id}/{Book?.Name?.Replace(" ","-")}";
+        urlBook = $"/books/{Books?.Id}/{Books?.Name?.Replace(" ","-")}";
     }
 }
