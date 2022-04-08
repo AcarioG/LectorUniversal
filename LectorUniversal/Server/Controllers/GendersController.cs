@@ -2,6 +2,7 @@
 using LectorUniversal.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LectorUniversal.Server.Controllers
 {
@@ -16,13 +17,13 @@ namespace LectorUniversal.Server.Controllers
             _db = db;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Get();
-        //{
-            
-        //}
+        [HttpGet]
+        public async Task<ActionResult<List<Gender>>> Get()
+        {
+            return await _db.Genders.ToListAsync(); 
+        }
 
-        [HttpPost]
+    [HttpPost]
         public async Task<ActionResult<int>> Post(Gender gender)
         {
             _db.Add(gender);

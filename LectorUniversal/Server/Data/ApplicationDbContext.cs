@@ -9,14 +9,14 @@ namespace LectorUniversal.Server.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        public ApplicationDbContext( DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions) 
+        public ApplicationDbContext( DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<BooksGender>().HasKey(g => new { g.BookId, g.GenderId});
+            builder.Entity<BooksGender>().HasKey(g => new { g.GenderId, g.BookId });
 
             base.OnModelCreating(builder);
         }

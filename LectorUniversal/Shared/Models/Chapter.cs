@@ -12,4 +12,10 @@ namespace LectorUniversal.Shared
         public virtual Book? Books { get; set; }
         public virtual List<Page>? ChapterPages { get; set; }
     }
+
+    public class Page
+    {
+        public int Id { get; set; }
+        public string? Image { get; set; }
+    }
 }

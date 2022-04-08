@@ -32,7 +32,7 @@ builder.Services.AddMvc().AddJsonOptions(op =>
 builder.Services.AddAutoMapper(conf =>
 {
     conf.CreateMap<Book, BooksDTO>().ReverseMap();
-    conf.CreateMap<Chapter, ChapterDTO>();
+    conf.CreateMap<Chapter, ChapterDTO>().ReverseMap();
     conf.CreateMap<Page, PageDTO>();
 },typeof(StartupBase));
 

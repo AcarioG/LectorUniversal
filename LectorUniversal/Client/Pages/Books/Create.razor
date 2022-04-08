@@ -1,6 +1,7 @@
 ﻿@page "/books/create"
 @inject IRepository repository
 @inject NavigationManager navigationManager
+@inject IShowMessages showMessages
 
 
 <h3>Create</h3>
@@ -17,8 +18,8 @@
 
         if (httpResponse.Error)
         {
-            var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
-            Console.WriteLine(body);
+            var body = await httpResponse.GetBody();
+            await showMessages.ShowErrorMessage(body);
         }
         else
         {

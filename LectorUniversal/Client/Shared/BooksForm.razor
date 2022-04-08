@@ -18,6 +18,15 @@
             </InputSelect>
         </div>
     </div>
+    <div class="form-group col-md-5">
+        <label>Gender:</label>
+        <InputSelect class="form-control" @bind-Value="@Book.Genders">
+            @foreach (var item in @Book.Genders)
+           {
+               <option value="@item">@item</option>
+           }
+        </InputSelect>
+    </div>
     <div class="form-control col-md-5">
         <InputImages Label="Cover" ImageSelected="ImageSelected" ImageTemp="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png" />
     </div>

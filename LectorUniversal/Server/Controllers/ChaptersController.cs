@@ -11,16 +11,14 @@ namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChapterController : ControllerBase
+    public class ChaptersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
-        private readonly BlobServiceClient _blobService;
         private readonly IMapper _mapper;
-        public ChapterController(ApplicationDbContext db, IMapper mapper, BlobServiceClient blobService)
+        public ChaptersController(ApplicationDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
-            _blobService = blobService;
         }
 
         [HttpGet]
@@ -32,7 +30,7 @@ namespace LectorUniversal.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromForm] ChapterDTO chapter)
+        public async Task<ActionResult<int>> Post([FromBody] Chapter chapter)
         {
             await _db.AddAsync(chapter);
             await _db.SaveChangesAsync();

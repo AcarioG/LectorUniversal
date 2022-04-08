@@ -1,0 +1,17 @@
+﻿<EditForm Model="Gender" OnSubmit="OnValidSubmit">
+    <div class="col-md-5">
+        <div class="form-group">
+            <label>Nombre:</label>
+            <div>
+                <InputText class="form=control" @bind-Value="@Gender.Name"/>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-success" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter] public Gender Gender { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

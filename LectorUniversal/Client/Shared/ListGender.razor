@@ -1,0 +1,21 @@
+﻿@inject IJSRuntime js
+
+
+
+<GenericList Lists="Genders">
+</GenericList>
+
+@code {
+    [Parameter] public List<Gender> Genders { get; set; }
+
+    async Task DeleteGender(Gender gender)
+    {
+        bool confirm = await js.InvokeAsync<bool>($"¿Desea borrar el genero {gender.Name}?");
+        if (confirm)
+        {
+            Genders.Remove(gender);
+            Console.WriteLine($"Se ha eliminado el genero {gender.Name}");
+        }
+    }
+
+}
