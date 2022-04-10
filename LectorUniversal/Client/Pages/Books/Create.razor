@@ -6,11 +6,19 @@
 
 <h3>Create</h3>
 
-<BooksForm OnValidSubmit="CreateBook" Book="Book" />
+<BooksForm OnValidSubmit="CreateBook" Book="Book"  GendersNotSelected="GendersNotSelected"/>
 
 
 @code {
     private Book Book = new Book();
+    private List<Gender> GendersNotSelected = new List<Gender>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        var reponseHttp = await repository.Get<List<Gender>>("api/genders");
+        GendersNotSelected = reponseHttp.Response; 
+
+    }
 
     private async Task CreateBook()
     {
