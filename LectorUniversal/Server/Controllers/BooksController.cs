@@ -29,7 +29,9 @@ namespace LectorUniversal.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
         {
-            var Book = await _db.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var Book = await _db.Books.Where(x => x.Id == id)
+                .Include(x => x.Genders).ThenInclude(x => x.Gender)
+                .FirstOrDefaultAsync();
 
             if (Book == null)
             {
@@ -38,7 +40,7 @@ namespace LectorUniversal.Server.Controllers
 
             var model = new VisualiseBookDTO();
             model.Book = Book;
-            //model.Genders = Book.Genders.Select(x => x.Gender).ToList();
+            model.Genders = Book.Genders.Select(x => x.Gender).ToList();
 
             return model;
         }
@@ -50,15 +52,32 @@ namespace LectorUniversal.Server.Controllers
             var booksDTO = _mapper.Map<List<BooksDTO>>(books);
             return Ok(booksDTO);
         }
-       
-        [HttpPost]
-        public async Task<ActionResult<int>> Post([FromBody]Book book )
+
+        [HttpGet("update/{id}")]
+        public async Task<ActionResult<BookUpdateDTO>> PutGet(int id)
         {
-            if (book.TypeofBook == BoBookTypes.bobt_comic)
+            var bookActionResult = await Get(id);
+            if (bookActionResult.Result is NotFoundResult) { return NotFound(); }
+
+            var bookViewDTO = bookActionResult.Value;
+            var gendersSelectedId = bookViewDTO.Genders.Select(x => x.Id).ToList();
+            var genedersNotSelected = _db.Genders.Where(x => !gendersSelectedId.Contains(x.Id)).ToList();
+
+            var model = new BookUpdateDTO();
+            model.Book = bookViewDTO.Book;
+            model.GendersNotSelected = genedersNotSelected;
+            model.GendersSelected = bookViewDTO.Genders;
+            return model;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> Post([FromBody] Book book)
+        {
+            if (book.TypeofBook == BoBookTypes.Comic)
             {
                 if (!string.IsNullOrWhiteSpace(book.Cover))
                 {
-                    string folder = $"Comics/{book.Name.Replace(" ","")}";
+                    string folder = $"Comics/{book.Name.Replace(" ", "-")}";
                     var coverPoster = Convert.FromBase64String(book.Cover);
                     book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg", folder);
                 }
@@ -66,6 +85,30 @@ namespace LectorUniversal.Server.Controllers
             _db.Add(book);
             await _db.SaveChangesAsync();
             return Ok(book);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Book book)
+        {
+            var bookDB = await _db.Books.FirstOrDefaultAsync(x => x.Id == book.Id);
+
+            if (bookDB == null) { return NotFound(); }
+
+            bookDB = _mapper.Map(book, bookDB);
+
+            if (!string.IsNullOrWhiteSpace(book.Cover))
+            {
+                var coverImage = Convert.FromBase64String(book.Cover);
+                var folder = $"Comics/{book.Name.Replace(" ", "-")}";
+                bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover);
+            }
+
+            await _db.Database.ExecuteSqlInterpolatedAsync($"delete from GendersBook WHERE BookId = {book.Id};");
+
+            bookDB.Genders = book.Genders;
+
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

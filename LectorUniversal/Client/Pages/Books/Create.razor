@@ -5,18 +5,38 @@
 
 
 <h3>Create</h3>
+@if (@MostrarForm != false)
+{
+    <BooksForm OnValidSubmit="CreateBook" Book="Book" GendersNotSelected="GendersNotSelected"/>
+    
+}
+else
+{
+    <text>Cargando..</text>
 
-<BooksForm OnValidSubmit="CreateBook" Book="Book"  GendersNotSelected="GendersNotSelected"/>
+}
 
 
 @code {
+    private bool MostrarForm { get; set; } = false;
     private Book Book = new Book();
     private List<Gender> GendersNotSelected = new List<Gender>();
 
     protected async override Task OnInitializedAsync()
     {
-        var reponseHttp = await repository.Get<List<Gender>>("api/genders");
-        GendersNotSelected = reponseHttp.Response; 
+        //GendersNotSelected = new List<Gender>()
+        //    {
+        //        new Gender(){ Id = 1, Name = "Accion" },
+        //        new Gender(){ Id = 2, Name = "Hentai" },
+        //        new Gender(){ Id = 3, Name = "Terror" },
+        //        new Gender(){ Id = 4, Name = "Sci-Fi" }
+        //    };
+
+        var responseHttp = await repository.Get<List<Gender>>("api/genders");
+        GendersNotSelected = responseHttp.Response;
+
+        StateHasChanged();
+        MostrarForm = true;
 
     }
 

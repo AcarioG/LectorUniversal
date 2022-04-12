@@ -41,6 +41,14 @@ namespace LectorUniversal.Client.Repository
             return new HttpResponseWrapper<object>(null, !response.IsSuccessStatusCode, response);
         }
 
+        public async Task<HttpResponseWrapper<object>> Put<T>(string url, T data)
+        {
+            var json = JsonSerializer.Serialize(data);
+            var context = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(url, context);
+            return new HttpResponseWrapper<object>(null, !response.IsSuccessStatusCode, response);
+        }
+
         public async Task<HttpResponseWrapper<TResponse>> Post<T, TResponse>(string url, T data)
         {
             var json = JsonSerializer.Serialize(data);

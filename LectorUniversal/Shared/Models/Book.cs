@@ -14,7 +14,7 @@
 
     public enum BoBookTypes
     {
-        bobt_comic = 0,
-        bobt_manga = 1
+        Comic = 0,
+        Manga = 1
     }
 }

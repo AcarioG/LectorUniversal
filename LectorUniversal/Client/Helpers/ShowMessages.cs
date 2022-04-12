@@ -23,7 +23,7 @@ namespace LectorUniversal.Client.Helpers
 
         private async ValueTask ShowMessage(string title, string message, string typeMessage)
         {
-            await _js.InvokeVoidAsync("Swal.fire", title, message, typeMessage);
+            await _js.InvokeVoidAsync("swal", title, message, typeMessage);
         }
     }
 }

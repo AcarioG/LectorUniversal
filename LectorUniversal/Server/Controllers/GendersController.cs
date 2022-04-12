@@ -23,12 +23,26 @@ namespace LectorUniversal.Server.Controllers
             return await _db.Genders.ToListAsync(); 
         }
 
-    [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Gender>> Get(int id)
+        {
+            return await _db.Genders.FirstOrDefaultAsync(g => g.Id == id);
+        }
+
+        [HttpPost]
         public async Task<ActionResult<int>> Post(Gender gender)
         {
             _db.Add(gender);
             await _db.SaveChangesAsync();
             return gender.Id;
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Gender gender)
+        {
+            _db.Attach(gender).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
