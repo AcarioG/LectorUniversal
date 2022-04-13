@@ -14,7 +14,7 @@
 @code {
     [Parameter] public int ActualPage { get; set; } = 1;
     [Parameter] public int MaxPages { get; set; }
-    [Parameter] public int Radio { get; set; } = 2;
+    [Parameter] public int Radio { get; set; } = 3;
     [Parameter] public EventCallback<int> PageSelected { get; set; }
     List<PaginationModel> Links = new List<PaginationModel>();
 
@@ -75,7 +75,7 @@
 
         public string Text { get; set; }
         public int Page { get; set; }
-        public bool Enable { get; set; }
-        public bool Active { get; set; }
+        public bool Enable { get; set; } = true;
+        public bool Active { get; set; } = false;
     }
 }

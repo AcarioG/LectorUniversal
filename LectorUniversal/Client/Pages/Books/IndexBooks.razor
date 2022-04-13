@@ -10,8 +10,10 @@
 
 
     <ListBooks Books="Books"/>
+
     <Pagination ActualPage="ActualPage" PageSelected="PageSelected"
         MaxPages="MaxPages"></Pagination>
+    
 
 @code {
     private int ActualPage = 1;
@@ -27,18 +29,17 @@
     {
         ActualPage = page;
         await LoadBooks(page);
+        StateHasChanged();
     }
 
-    private async Task LoadBooks(int page = 1)
+    private async Task LoadBooks(int page = 2)
     {
         var responseHttp = await repository.Get<List<Book>>($"api/books?pagination={page}");
         if (!responseHttp.Error)
         {
             Books = responseHttp.Response;
-            var count = responseHttp.HttpResponseMessage.Headers.GetValues("count").FirstOrDefault();
-            MaxPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("totalpages").FirstOrDefault());
-
-            Console.WriteLine($"conteo: {count} y total de paginas: {MaxPages}");
+            var count = responseHttp.HttpResponseMessage.Headers.GetValues("countRecord").FirstOrDefault();
+            MaxPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("TotalRecords").FirstOrDefault());
         }
     }
 

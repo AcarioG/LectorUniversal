@@ -9,6 +9,6 @@ namespace LectorUniversal.Shared.DTOs
     public class PaginationDTO
     {
         public int Page { get; set; } = 1;
-        public int Records { get; set; } = 2;
+        public int Records { get; set; } = 5;
     }
 }
