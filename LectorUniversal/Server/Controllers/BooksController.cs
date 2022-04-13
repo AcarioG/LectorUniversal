@@ -46,11 +46,11 @@ namespace LectorUniversal.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Book>>> GetAll()
+        public async Task<ActionResult<List<Book>>> GetAll([FromQuery]PaginationDTO pagination)
         {
-            var books = await _db.Books.ToListAsync();
-            var booksDTO = _mapper.Map<List<BooksDTO>>(books);
-            return Ok(booksDTO);
+            var queryable = _db.Books.AsQueryable();
+            await HttpContext.InsertParameterInResponse(queryable, pagination.Records);
+            return await queryable.Pagination(pagination).ToListAsync();
         }
 
         [HttpGet("update/{id}")]
@@ -107,6 +107,21 @@ namespace LectorUniversal.Server.Controllers
 
             bookDB.Genders = book.Genders;
 
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exits = await _db.Books.AnyAsync(x => x.Id == id);
+            if (!exits) { return NotFound(); }
+
+            //var book = await _db.Books.FirstOrDefaultAsync(x => x.Id == id);
+            //var folder = book.Name.Replace(" ", "-");
+            //await _fileUpload.DeleteFile(folder, book.Cover);
+
+            _db.Remove(new Book { Id = id });
             await _db.SaveChangesAsync();
             return NoContent();
         }

@@ -64,5 +64,11 @@ namespace LectorUniversal.Client.Repository
                 return new HttpResponseWrapper<TResponse>(default, true, responseHttp);
             }
         }
+
+        public async Task<HttpResponseWrapper<object>> Delete(string url)
+        {
+            var responseHttp = await _httpClient.DeleteAsync(url);
+            return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        }
     }
 }

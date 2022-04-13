@@ -46,7 +46,7 @@ namespace LectorUniversal.Server.Helpers
                 throw new Exception();
             }
 
-            string Container = Path.Combine(wwwRootPath, Folder).Replace(" ", "");
+            string Container = Path.Combine(wwwRootPath, Folder).Replace(" ", "-");
 
             if (!Directory.Exists(Container))
             {

@@ -1,5 +1,6 @@
 ﻿@page "/books"
 @inject IRepository repository
+@inject IShowMessages showMessages
 
 <h3>ListBooks</h3>
 
@@ -7,17 +8,40 @@
     <a class="btn btn-success" href="books/create">Agregar Libro</a>
 </div>
 
-<div>
+
     <ListBooks Books="Books"/>
-</div>
+    <Pagination ActualPage="ActualPage" PageSelected="PageSelected"
+        MaxPages="MaxPages"></Pagination>
 
 @code {
-
+    private int ActualPage = 1;
+    private int MaxPages;
     public List<Book> Books {get; set; }
 
     protected async override Task OnInitializedAsync()
     {
-        var reponseHttp = await repository.Get<List<Book>>("api/books");
-        Books = reponseHttp.Response; 
+        await LoadBooks();
     }
+
+    private async Task PageSelected(int page)
+    {
+        ActualPage = page;
+        await LoadBooks(page);
+    }
+
+    private async Task LoadBooks(int page = 1)
+    {
+        var responseHttp = await repository.Get<List<Book>>($"api/books?pagination={page}");
+        if (!responseHttp.Error)
+        {
+            Books = responseHttp.Response;
+            var count = responseHttp.HttpResponseMessage.Headers.GetValues("count").FirstOrDefault();
+            MaxPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("totalpages").FirstOrDefault());
+
+            Console.WriteLine($"conteo: {count} y total de paginas: {MaxPages}");
+        }
+    }
+
+
+   
 }

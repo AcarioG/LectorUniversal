@@ -46,7 +46,7 @@
                 ImageBase64 = Convert.ToBase64String(bytesImage);
                 await ImageSelected.InvokeAsync(ImageBase64);
                 ImageTemp = null;
-                StateHasChanged();
+                //StateHasChanged();
             }
         }
     }

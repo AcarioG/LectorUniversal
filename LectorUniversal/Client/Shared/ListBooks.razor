@@ -1,4 +1,6 @@
 ﻿@inject IJSRuntime js
+@inject IRepository repository
+@inject IShowMessages showMessages
 
 <div style="display: flex; flex-wrap: wrap; align-items:center;">
     <GenericList Lists="Books">
@@ -13,11 +15,19 @@
 
     async Task DeleteBook(Book book)
     {
-        bool confirm = await js.InvokeAsync<bool>($"¿Desea borrar la película {book.Name}?");
-        if (confirm)
+        bool confirmed = await js.InvokeAsync<bool>("confirm", "Esta seguro que desea eliminar este Comic?");
+        if (confirmed)
         {
-            Books.Remove(book);
-            Console.WriteLine($"Se ha eliminado la pelicula {book.Name}");
+            var responseHttp = await repository.Delete($"api/books/{book.Id}");
+            if (responseHttp.Error)
+            {
+                await showMessages.ShowErrorMessage(await responseHttp.GetBody());
+            }
+            else
+            {
+                Books.Remove(book);
+            }
+            Console.WriteLine($"Se ha eliminado el comic {book.Name}");
         }
     }
 }

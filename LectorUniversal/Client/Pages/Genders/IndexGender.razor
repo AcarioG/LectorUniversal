@@ -1,5 +1,6 @@
 ﻿@page "/genders"
 @inject IRepository repository
+@inject IShowMessages showMessages
 
 <h3>IndexGender</h3>
 
@@ -22,7 +23,7 @@
                            <tr>
                                <td>
                                    <a href="/genders/edit/@item.Id" class="btn btn-success">Editar</a>
-                                   <button class="btn btn-danger">Borrar</button>
+                                   <button onclick="@(() => DeleteGender(item))" class="btn btn-danger">Borrar</button>
                                </td>
                                <td>@item.Name</td>
                            </tr>    
@@ -40,8 +41,27 @@
 
     protected async override Task OnInitializedAsync()
     {
+        await LoadGenders(); 
+    }
+
+    private async Task LoadGenders()
+    {
         var reponseHttp = await repository.Get<List<Gender>>("api/genders");
         Genders = reponseHttp.Response; 
+    }
+
+    private async Task DeleteGender(Gender gender)
+    {
+        var responseHttp = await repository.Delete($"api/genders/{gender.Id}");
+        if (responseHttp.Error)
+        {
+            await showMessages.ShowErrorMessage(await responseHttp.GetBody());
+        }
+        else
+        {
+            await LoadGenders();
+            StateHasChanged();
+        }
     }
 
 }

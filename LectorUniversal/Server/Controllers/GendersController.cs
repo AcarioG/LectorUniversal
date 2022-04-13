@@ -44,5 +44,15 @@ namespace LectorUniversal.Server.Controllers
             await _db.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exits = await _db.Genders.AnyAsync(x => x.Id == id);
+            if (!exits)  { return NotFound(); }
+            _db.Remove(new Gender { Id = id });
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
