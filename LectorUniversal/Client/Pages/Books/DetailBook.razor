@@ -20,14 +20,14 @@ else
         <a href="/chapter/create" class="btn btn-success">Agregar Capitulo</a>
         <br/>
        @* @foreach (var item in model.Chapters)
-       {*@
+       {
            <ul class="list-group">
           <li class="list-group-item">
             <span class="badge">14</span>
-            @*@model.Chapters.Select(x => x.Title).ToList();*@
+            @model.Chapters.Select(x => x.Title).ToList();
           </li>
           </ul>
-       @*}*@
+       }*@
         
     </div>
 }

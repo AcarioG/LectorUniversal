@@ -17,14 +17,16 @@ namespace LectorUniversal.Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<BooksGender>().HasKey(g => new { g.GenderId, g.BookId });
+            //builder.Entity<ChapterPages>().HasKey(c => new { c.PageId, c.ChapterId });
 
             base.OnModelCreating(builder);
         }
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
-        public DbSet<Page> Pages { get; set; }
+        public DbSet<Shared.Pages> Pages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<BooksGender> GenderBooks { get; set; }
+        //public DbSet<ChapterPages> ChapterPages { get; set; }
     }
 }

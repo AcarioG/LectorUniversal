@@ -12,16 +12,47 @@
                 <InputNumber class=form-control @bind-Value=@Chapter.BookId></InputNumber>
             </div>
         </div>
+        <div class="form-group col-md-5">
+            <MultipleImages Label="Pages" ImageSelected="ImageSelected"/>
+        </div>
         <button type="submit" class="btn btn-success">Submit</button>
+        
+        
+        
+        @*<MudPaper>        
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Primary">
+                Upload
+            </MudButton>
+            <MudChipSet AllClosable="true" OnClose="Closed">
+                @foreach (var value in values)
+                {
+                    <MudChip Text="@value"></MudChip>
+                }
+            </MudChipSet>
+        </MudPaper>*@
+
     </div>
 </EditForm>
 
 @code {
     [Parameter] public Chapter Chapter {  get;  set; }
+    [Parameter] public Pages Page { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string Images;
+    //private string ImageTemp;
 
     protected override void OnInitialized()
     {
+        //public void Closed(MudChip chip) => Pages.Remove();
+    }
+
+    private void ImageSelected(List<string> ImageBase64)
+    {
+        foreach (var item in ImageBase64)
+        {
+            Images = item;
+        }
         
+        Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
 }

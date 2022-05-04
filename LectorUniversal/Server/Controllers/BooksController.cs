@@ -31,6 +31,7 @@ namespace LectorUniversal.Server.Controllers
         {
             var Book = await _db.Books.Where(x => x.Id == id)
                 .Include(x => x.Genders).ThenInclude(x => x.Gender)
+                //.Include(x => x.Chapters).ThenInclude(x => x.Books)
                 .FirstOrDefaultAsync();
 
             if (Book == null)

@@ -1,21 +1,18 @@
-﻿<div>
-    <div class="card" style="width:230px;">
-        <a href="@urlBook">
-        <img class="card-img-top" src="@Books.Cover.ToString()">
-        <div class="card-body">
-            <h5 class="card-title">@Books.Name</h5>
-        </div>
-        </a>
-        <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-    </div>
-
- <a class="btn btn-info" href="books/edit/@Books.Id">Edit</a>
-    <button type="button" class="btn btn-danger align-bottom:center"
-            @onclick="@(() => DeleteBook.InvokeAsync(Books))">
-        Borrar
-    </button>
+﻿@inject NavigationManager navigationManager
+<div class="form-group">
+<a href="@urlBook" style="text-underline-offset:auto">
+<MudCard>
+    <MudCardMedia Image="@Books.Cover.ToString()" Style="width:230px; height:150px;"  />
+    <MudCardContent>
+        <MudText Typo="Typo.h5" Align="Align.Center">@Books.Name</MudText>
+    </MudCardContent>
+</MudCard>
+</a>
+<div class="align-content-center">
+    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@editUrlBook" Color="Color.Warning" Size="Size.Large"></MudIconButton>
+    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
+        @onclick="(() => DeleteBook.InvokeAsync(Books))" Size="Size.Large" Style="" ></MudIconButton>
+</div>
 </div>
 
 @code {
@@ -23,10 +20,12 @@
     [Parameter] public bool ShowButtons { get; set; } = false;
     [Parameter] public EventCallback<Book> DeleteBook { get; set; }
     private string urlBook = string.Empty;
+    private string editUrlBook = string.Empty;
 
     protected override void OnInitialized()
     {
         urlBook = $"/books/{Books?.Id}/{Books?.Name?.Replace(" ","-")}";
+        editUrlBook = $"books/edit/{Books?.Id}";
     }
 
     

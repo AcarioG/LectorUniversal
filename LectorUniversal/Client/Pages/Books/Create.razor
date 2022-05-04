@@ -24,14 +24,6 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        //GendersNotSelected = new List<Gender>()
-        //    {
-        //        new Gender(){ Id = 1, Name = "Accion" },
-        //        new Gender(){ Id = 2, Name = "Hentai" },
-        //        new Gender(){ Id = 3, Name = "Terror" },
-        //        new Gender(){ Id = 4, Name = "Sci-Fi" }
-        //    };
-
         var responseHttp = await repository.Get<List<Gender>>("api/genders");
         GendersNotSelected = responseHttp.Response;
 

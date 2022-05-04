@@ -4,16 +4,18 @@ using LectorUniversal.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LectorUniversal.Server.Data.Migrations
+namespace LectorUniversal.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220504154943_remove_chapterpages_model")]
+    partial class remove_chapterpages_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,7 +330,7 @@ namespace LectorUniversal.Server.Data.Migrations
                     b.ToTable("Genders");
                 });
 
-            modelBuilder.Entity("LectorUniversal.Shared.Page", b =>
+            modelBuilder.Entity("LectorUniversal.Shared.Pages", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -339,7 +341,7 @@ namespace LectorUniversal.Server.Data.Migrations
                     b.Property<int?>("ChapterId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -516,7 +518,7 @@ namespace LectorUniversal.Server.Data.Migrations
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("LectorUniversal.Shared.Page", b =>
+            modelBuilder.Entity("LectorUniversal.Shared.Pages", b =>
                 {
                     b.HasOne("LectorUniversal.Shared.Chapter", null)
                         .WithMany("ChapterPages")

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Tewr.Blazor.FileReader;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -19,7 +20,9 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IShowMessages, ShowMessages>();
 builder.Services.AddFileReaderService(opt => opt.InitializeOnFirstCall = true);
+builder.Services.AddMudServices();
 
 builder.Services.AddApiAuthorization();
+
 
 await builder.Build().RunAsync();

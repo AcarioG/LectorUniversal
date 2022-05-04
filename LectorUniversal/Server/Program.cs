@@ -1,11 +1,9 @@
-using Azure.Storage.Blobs;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
 using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +31,7 @@ builder.Services.AddAutoMapper(conf =>
 {
     conf.CreateMap<Book, BooksDTO>().ReverseMap();
     conf.CreateMap<Chapter, ChapterDTO>().ReverseMap();
-    conf.CreateMap<Page, PageDTO>();
+    conf.CreateMap<Pages, PageDTO>().ReverseMap();
 },typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();

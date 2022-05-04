@@ -5,7 +5,7 @@
 <div class="col-md-4">
     <label>@Label</label>
     <div>
-        <input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png"/>
+        <input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png" />
     </div>
 </div>
 
@@ -19,20 +19,20 @@
         </div>
     }
     @if (ImageBase64 == null)
-   {
-       <div>
+    {
+        <div>
             <div style="margin:10px;">
                 <img src="@ImageTemp" style="width:150px;" />
             </div>
         </div>
-   }
+    }
 </div>
 
 @code {
     [Parameter] public string Label { get; set; } = "Image";
+    private string? ImageBase64;
     [Parameter] public string? ImageTemp { get; set; }
     [Parameter] public EventCallback<string> ImageSelected { get; set; }
-    private string? ImageBase64;
     ElementReference inputElement;
 
     async Task ImageFileSelected()
