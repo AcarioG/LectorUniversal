@@ -1,0 +1,18 @@
+﻿<MudSelect T="string" Label="Comics" AnchorOrigin="Origin.BottomCenter">
+    @foreach (var item in Books)
+    {
+        <MudSelectItem  Value="@(item.Key)">@item.Value</MudSelectItem>
+    }
+    
+</MudSelect>
+
+@code {
+    [Parameter] public Chapter Chapter {  get;  set; }
+    [Parameter] public List<MultipleSelectorModel> Books { get; set; } = new List<MultipleSelectorModel>();
+
+
+    private void LoadBooks(MultipleSelectorModel item)
+    {
+        Books.Add(item);
+    }
+}

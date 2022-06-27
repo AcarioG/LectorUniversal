@@ -7,5 +7,6 @@ namespace LectorUniversal.Shared.DTOs
         public Book Book { get; set; }
         public List<Chapter>? Chapters { get; set; }
         public List<Gender>? Genders { get; set; }
+        public List<Pages>? Pages { get; set; }
     }
 }

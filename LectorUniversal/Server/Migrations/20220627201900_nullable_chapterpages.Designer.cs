@@ -4,6 +4,7 @@ using LectorUniversal.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LectorUniversal.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220627201900_nullable_chapterpages")]
+    partial class nullable_chapterpages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +107,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -256,7 +258,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.BooksGender", b =>
@@ -271,7 +273,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("GenderBooks", (string)null);
+                    b.ToTable("GenderBooks");
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Chapter", b =>
@@ -299,7 +301,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("BooksId");
 
-                    b.ToTable("Chapters", (string)null);
+                    b.ToTable("Chapters");
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Gender", b =>
@@ -322,7 +324,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genders", (string)null);
+                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Pages", b =>
@@ -343,7 +345,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.ToTable("Pages", (string)null);
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

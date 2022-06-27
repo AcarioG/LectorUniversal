@@ -31,9 +31,10 @@ namespace LectorUniversal.Server.Controllers
         {
             var Book = await _db.Books.Where(x => x.Id == id)
                 .Include(x => x.Genders).ThenInclude(x => x.Gender)
-                //.Include(x => x.Chapters).ThenInclude(x => x.Books)
+                .Include(x => x.Chapters.Where(c => c.Books.Id == id))
                 .FirstOrDefaultAsync();
 
+            //var Chapter = await _db.Chapters.FirstOrDefaultAsync(;
             if (Book == null)
             {
                 return NotFound();
@@ -42,6 +43,7 @@ namespace LectorUniversal.Server.Controllers
             var model = new VisualiseBookDTO();
             model.Book = Book;
             model.Genders = Book.Genders.Select(x => x.Gender).ToList();
+            model.Chapters = Book.Chapters.ToList();
 
             return model;
         }

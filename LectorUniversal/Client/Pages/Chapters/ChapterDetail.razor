@@ -1,0 +1,54 @@
+﻿@page "/chapters/viewer/{Id:int}"
+@inject IRepository repository
+@inject IShowMessages showMessage
+@inject NavigationManager navigationManager
+
+<h3>ChapterDetail</h3>
+
+@if (@MostrarForm != false)
+{
+    <div>
+        @*<img src="@model.Chapters.Select(x => x.ChapterPages.Select(c => c.ImageUrl))">*@
+    </div>
+    @foreach (var item in ChapterPages)
+    {
+        <img src="@item.ImageUrl" />
+    }
+}else
+{
+    <text>no hay registros</text>
+}
+
+
+
+
+@code {
+    private bool MostrarForm { get; set; } = false;
+    [Parameter] public int Id { get; set; }
+    VisualiseBookDTO model;
+    List<Pages> ChapterPages;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/chapters/viewer/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("books");
+            }
+            else
+            {
+                await showMessage.ShowErrorMessage(await responseHttp.GetBody());
+            }
+        }
+        else
+        {
+            model = responseHttp.Response;
+            ChapterPages = model.Pages;
+            StateHasChanged();
+            MostrarForm = true;
+        }
+    }
+}

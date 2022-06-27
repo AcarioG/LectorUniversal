@@ -1,0 +1,84 @@
+﻿@inject IRepository repository
+
+<AddChapterForm Model="Book" OnSubmit="OnDataAnnotationsValidated">
+    <div class="col-md-5">
+        <div class="form-group col-md-5">
+            <label>Titulo:</label>
+            <div>
+                <InputText class=form-control @bind-Value=@Book.Name></InputText>
+            </div>
+        </div>
+        <div class="form-group col-md-5" hidden="hidden">
+            <label>Type:</label>
+            <div>
+                @*<input class="form-control" @bind-value="@Book.TypeofBook"></input>*@
+                <InputSelect class="form-control" @bind-Value="@Book.TypeofBook">
+                    @foreach (var types in Enum.GetValues(typeof(BoBookTypes)))
+                   {
+                       <option value="@types">@types</option>
+                   }
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-control col-md-5" hidden="hidden">
+            <InputImages Label="Cover" ImageSelected="ImageSelected" ImageTemp="@ImageTemp" />
+        </div>
+    
+        <div class="form-group col-md-5" hidden="true">
+            <label>Editorial:</label>
+            <div>
+                <InputText class=form-control @bind-Value=@Book.Editorial></InputText>
+            </div>
+        </div>
+    <div class="form-group" hidden="hidden">
+        <label>Gender:</label>
+        <MultipleSelector Selected="Selected" NotSelected="NotSelected"></MultipleSelector>
+    </div>
+    <button class="btn btn-success" type="submit">Submit</button>
+    </div>
+</AddChapterForm>
+
+
+@code {
+    [Parameter] public Book Book { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public List<Gender> GendersSelected {get;set;} = new List<Gender>();
+    [Parameter] public List<Gender> GendersNotSelected {get;set;} = new List<Gender>();
+
+    private List<MultipleSelectorModel> Selected { get; set; } = new List<MultipleSelectorModel>();
+    private List<MultipleSelectorModel> NotSelected { get; set; } = new List<MultipleSelectorModel>();
+
+    private string ImageTemp;
+
+
+
+    protected override void OnInitialized()
+    {
+        Selected = GendersSelected.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+        NotSelected = GendersNotSelected.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+
+        if (!string.IsNullOrWhiteSpace(Book.Cover))
+        {
+            ImageTemp = Book.Cover;
+            Book.Cover = null;  
+        }
+        else
+        {
+            ImageTemp = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+        }
+
+        StateHasChanged();
+    }
+    private void ImageSelected(string ImageBase64)
+    {
+        Book.Cover = ImageBase64;
+    }
+
+    private async Task OnDataAnnotationsValidated()
+    {
+        Book.Genders = Selected.Select(x => new BooksGender { GenderId = int.Parse(x.Key) }).ToList();
+
+        await OnValidSubmit.InvokeAsync(null);
+    }
+
+}

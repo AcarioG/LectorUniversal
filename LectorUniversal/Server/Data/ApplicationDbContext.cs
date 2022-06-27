@@ -17,7 +17,10 @@ namespace LectorUniversal.Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<BooksGender>().HasKey(g => new { g.GenderId, g.BookId });
-            //builder.Entity<ChapterPages>().HasKey(c => new { c.PageId, c.ChapterId });
+            //builder.Entity<BooksChapter>().HasKey(c => new { c.ChapterId, c.BookId });
+            builder.Entity<Book>().HasMany(c => c.Chapters).WithOne(b => b.Books).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Chapter>().HasKey(g => new { g.BooksId, g.Books.Id });
+            builder.Entity<Chapter>().HasMany(p => p.ChapterPages).WithOne(c => c.Chapter);
 
             base.OnModelCreating(builder);
         }
@@ -27,6 +30,7 @@ namespace LectorUniversal.Server.Data
         public DbSet<Shared.Pages> Pages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<BooksGender> GenderBooks { get; set; }
+        //public DbSet<BooksChapter> ChapterBooks { get; set; }
         //public DbSet<ChapterPages> ChapterPages { get; set; }
     }
 }

@@ -26,15 +26,42 @@ namespace LectorUniversal.Server.Controllers
         public async Task<IActionResult> GetAll()
         {
             var chapters = await _db.Chapters.ToListAsync();
-            var chapterDTO = _mapper.Map<ChapterDTO>(chapters);
-            return Ok(chapterDTO);
+            //var chapterDTO = _mapper.Map<ChapterDTO>(chapters);
+            return Ok(chapters);
+        }
+
+        [HttpGet("viewer/{id}")]
+        public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
+        {
+            List<Chapter> chapter = new List<Chapter>();
+                
+                chapter.Add(await _db.Chapters.Where(x => x.Id == id)
+                .Include(b => b.Books)
+                .Include(p => p.ChapterPages.Where(x => x.Chapter.Id == id))
+                .FirstOrDefaultAsync());
+
+            if (chapter == null)
+            {
+                return NotFound();
+            }
+
+
+            var model = new VisualiseBookDTO();
+
+            model.Chapters = chapter;
+            model.Book = chapter.Select(x => x.Books).FirstOrDefault();
+            model.Pages = chapter.Select(x => x.ChapterPages).First().ToList();
+            //model.Genders = chapter.Select(x => x.Books.Genders.Select(x => x.Gender).ToList());
+
+            return model;
+
         }
 
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] Chapter chapter)
         {
                     string folder = $"Comics/Flash/{chapter.Title.Replace(" ", "-")}";
-            Shared.Pages pages = new Shared.Pages();
+            //Shared.Pages pages = new Shared.Pages();
             List<string> imgUrl = new List<string>();
             foreach (var item in chapter.ChapterPages)
             {
@@ -45,9 +72,7 @@ namespace LectorUniversal.Server.Controllers
             foreach (var item in imgUrl)
             {
                 chapter.ChapterPages.Add(new Shared.Pages { ImageUrl = item});
-            }        
-            
-
+            }
 
             await _db.AddAsync(chapter);
             await _db.SaveChangesAsync();
