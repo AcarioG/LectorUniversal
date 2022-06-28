@@ -27,12 +27,7 @@ builder.Services.AddAuthentication()
 builder.Services.AddMvc().AddJsonOptions(op => 
     op.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
-builder.Services.AddAutoMapper(conf =>
-{
-    conf.CreateMap<Book, BooksDTO>().ReverseMap();
-    conf.CreateMap<Chapter, ChapterDTO>().ReverseMap();
-    conf.CreateMap<Pages, PageDTO>().ReverseMap();
-},typeof(StartupBase));
+builder.Services.AddAutoMapper(typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 //builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));

@@ -34,7 +34,7 @@ else
 
     private async Task CreateBook()
     {
-        var httpResponse = await repository.Post<Book, int>("api/books", Book);
+        var httpResponse = await repository.Post<Book>("api/books", Book);
 
         if (httpResponse.Error)
         {
@@ -43,8 +43,9 @@ else
         }
         else
         {
-            var bookId = httpResponse.Response;
-            navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-")}");
+            //var bookId = httpResponse.Response;
+            //navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-")}");
+            navigationManager.NavigateTo($"books/");
         }
     }
 }

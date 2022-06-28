@@ -60,7 +60,8 @@ namespace LectorUniversal.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] Chapter chapter)
         {
-                    string folder = $"Comics/Flash/{chapter.Title.Replace(" ", "-")}";
+            var book = await _db.Books.Where(x => x.Id == chapter.BooksId).FirstOrDefaultAsync();
+                    string folder = $"Comics/{book.Name.Replace(" ", "-")}/{chapter.Title.Replace(" ", "-")}";
             //Shared.Pages pages = new Shared.Pages();
             List<string> imgUrl = new List<string>();
             foreach (var item in chapter.ChapterPages)

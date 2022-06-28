@@ -31,7 +31,7 @@ namespace LectorUniversal.Server.Controllers
         {
             var Book = await _db.Books.Where(x => x.Id == id)
                 .Include(x => x.Genders).ThenInclude(x => x.Gender)
-                .Include(x => x.Chapters.Where(c => c.Books.Id == id))
+                .Include(x => x.Chapters.Where(c => c.BooksId == id))
                 .FirstOrDefaultAsync();
 
             //var Chapter = await _db.Chapters.FirstOrDefaultAsync(;
@@ -64,7 +64,7 @@ namespace LectorUniversal.Server.Controllers
 
             var bookViewDTO = bookActionResult.Value;
             var gendersSelectedId = bookViewDTO.Genders.Select(x => x.Id).ToList();
-            var genedersNotSelected = _db.Genders.Where(x => !gendersSelectedId.Contains(x.Id)).ToList();
+            var genedersNotSelected = await _db.Genders.Where(x => !gendersSelectedId.Contains(x.Id)).ToListAsync();
 
             var model = new BookUpdateDTO();
             model.Book = bookViewDTO.Book;
@@ -106,10 +106,11 @@ namespace LectorUniversal.Server.Controllers
                 bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover);
             }
 
-            await _db.Database.ExecuteSqlInterpolatedAsync($"delete from GendersBook WHERE BookId = {book.Id};");
+            await _db.Database.ExecuteSqlInterpolatedAsync($"delete from GenderBooks WHERE BookId = {book.Id};");
 
             bookDB.Genders = book.Genders;
 
+            
             await _db.SaveChangesAsync();
             return NoContent();
         }
@@ -120,11 +121,12 @@ namespace LectorUniversal.Server.Controllers
             var exits = await _db.Books.AnyAsync(x => x.Id == id);
             if (!exits) { return NotFound(); }
 
-            //var book = await _db.Books.FirstOrDefaultAsync(x => x.Id == id);
-            //var folder = book.Name.Replace(" ", "-");
-            //await _fileUpload.DeleteFile(folder, book.Cover);
+            var book = await _db.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var folder = "Comics/"+book.Name.Replace(" ", "-");
+            await _fileUpload.DeleteFile(folder, book.Cover);
 
-            _db.Remove(new Book { Id = id });
+            _db.Remove(book);
+            //new Book { Id = id }
             await _db.SaveChangesAsync();
             return NoContent();
         }

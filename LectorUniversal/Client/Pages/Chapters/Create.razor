@@ -32,7 +32,7 @@ else
 
     private async Task CreateChapter()
     {
-        var httpResponse = await repository.Post<Chapter, int>("api/chapters", Chapter);
+        var httpResponse = await repository.Post<Chapter>("api/chapters", Chapter);
 
         if (httpResponse.Error)
         {
@@ -40,7 +40,8 @@ else
         }
         else
         {
-            var bookId = httpResponse.Response;
+            //var bookId = httpResponse.Response;
+            navigationManager.NavigateTo("books/");
         }
     }
 }
