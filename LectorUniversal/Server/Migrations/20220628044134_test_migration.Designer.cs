@@ -4,6 +4,7 @@ using LectorUniversal.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LectorUniversal.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220628044134_test_migration")]
+    partial class test_migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,7 +509,7 @@ namespace LectorUniversal.Server.Migrations
                     b.HasOne("LectorUniversal.Shared.Book", "Books")
                         .WithMany("Chapters")
                         .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Books");
                 });
@@ -517,7 +519,7 @@ namespace LectorUniversal.Server.Migrations
                     b.HasOne("LectorUniversal.Shared.Chapter", "Chapter")
                         .WithMany("ChapterPages")
                         .HasForeignKey("ChapterId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Chapter");
                 });

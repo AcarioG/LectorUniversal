@@ -1,14 +1,14 @@
 ﻿@inject NavigationManager navigationManager
 <div class="form-group">
-<a href="@urlBook" style="text-underline-offset:auto">
-<MudCard>
-    <MudCardMedia Image="@Books.Cover.ToString()" Style="width:230px; height:150px;"  />
-    <MudCardContent>
-        <MudText Typo="Typo.h5" Align="Align.Center">@Books.Name</MudText>
-    </MudCardContent>
-</MudCard>
-</a>
-<div class="align-content-center">
+    <MudLink Href="@urlBook" Underline="Underline.None">
+        <MudCard Style="width:250px; height:410px; margin-left:15px;" >
+            <MudCardMedia Image="@Books.Cover.ToString()" Style="width:230px; height:350px; margin-top:30px; margin-left:10px;"/>
+            <MudCardContent>
+                <MudText Typo="Typo.h5" Align="Align.Center">@Books.Name</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudLink>
+<div class="align-content-center" style="margin-top:10px; margin-left:80px;">
     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@editUrlBook" Color="Color.Warning" Size="Size.Large"></MudIconButton>
     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
         @onclick="(() => DeleteBook.InvokeAsync(Books))" Size="Size.Large" Style="" ></MudIconButton>

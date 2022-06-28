@@ -3,14 +3,20 @@
         <div class="form-group col-md-5">
             <label>Comic:</label>
             <div>
-                @*<MudSelect T="string" Label="Comics" AnchorOrigin="Origin.BottomCenter">
+                @*<MudSelect T="selec" Label="Comics" AnchorOrigin="Origin.BottomCenter" @bind-SelectedValues=@Chapter.BooksId>
                     @foreach (var item in Books)
                     {
                         <MudSelectItem Value="@(item.Key)">@item.Value</MudSelectItem>
                     }
                 </MudSelect>*@
-                @*<BookSelector Books="Books" @bind-Value=@Chapter.Books></BookSelector>*@
-                <MudNumericField @bind-Value=@Chapter.Books></MudNumericField>
+                <InputSelect @bind-Value=@Chapter.BooksId>
+                    @foreach (var item in Books)
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                </InputSelect>
+                @*<BookSelector Books="Books" ></BookSelector>*@
+                @*<MudNumericField @bind-Value=@Chapter.BooksId></MudNumericField>*@
             </div>
         </div>
         <div class="form-group col-md-5">

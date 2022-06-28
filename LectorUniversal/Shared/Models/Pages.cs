@@ -11,6 +11,7 @@ namespace LectorUniversal.Shared
     {
         public int Id { get; set; }
         public string? ImageUrl { get; set; } = string.Empty;
+        public int? ChapterId { get; set; }
         [JsonIgnore]
         public virtual Chapter? Chapter { get; set; }
     }

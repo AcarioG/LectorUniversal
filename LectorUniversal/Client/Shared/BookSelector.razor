@@ -1,4 +1,4 @@
-﻿<MudSelect T="string" Label="Comics" AnchorOrigin="Origin.BottomCenter">
+﻿<MudSelect T="string" Label="Comics" AnchorOrigin="Origin.BottomCenter" >
     @foreach (var item in Books)
     {
         <MudSelectItem  Value="@(item.Key)">@item.Value</MudSelectItem>
