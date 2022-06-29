@@ -13,10 +13,10 @@ namespace LectorUniversal.Server.Helpers
             _contextAccessor = httpContextAccessor;
         }
 
-        public Task DeleteFile(string Folder, string ImgUrl)
+        public Task DeleteFile(string Folder,string Type, string ImgUrl)
         {
             var filename = Path.GetFileName(ImgUrl);
-            string directory = Path.Combine(_webHostEnvironment.WebRootPath, Folder, filename);
+            string directory = Path.Combine(_webHostEnvironment.WebRootPath, Type, Folder, filename);
 
             if (File.Exists(directory))
             {
@@ -26,17 +26,17 @@ namespace LectorUniversal.Server.Helpers
             return Task.FromResult(0);
         }
 
-        public async Task<string> EditFile(byte[] content, string extention, string Folder, string ImgUrl)
+        public async Task<string> EditFile(byte[] content, string extention, string Folder, string ImgUrl, string Type)
         {
             if (!string.IsNullOrEmpty(ImgUrl))
             {
-                await DeleteFile(ImgUrl, Folder);
+                await DeleteFile(ImgUrl, Type, Folder);
             }
 
-            return await SaveFile(content, extention, Folder);
+            return await SaveFile(content, extention, Type, Folder);
         }
 
-        public async Task<string> SaveFile(byte[] content, string extention, string Folder)
+        public async Task<string> SaveFile(byte[] content, string extention, string Type, string Folder)
         {
             var fileName = $"{Guid.NewGuid()}.{extention}";
             string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -46,7 +46,7 @@ namespace LectorUniversal.Server.Helpers
                 throw new Exception();
             }
 
-            string Container = Path.Combine(wwwRootPath, Folder).Replace(" ", "-");
+            string Container = Path.Combine(wwwRootPath,Type, Folder).Replace(" ", "-");
 
             if (!Directory.Exists(Container))
             {
@@ -57,7 +57,7 @@ namespace LectorUniversal.Server.Helpers
             await File.WriteAllBytesAsync(path, content);
 
             var url = $"{_contextAccessor.HttpContext?.Request.Scheme}://{_contextAccessor.HttpContext?.Request.Host}";
-            var dbPathUrl = Path.Combine(url, Folder, fileName).Replace("\\","/");
+            var dbPathUrl = Path.Combine(url,Type, Folder, fileName).Replace("\\","/");
             return dbPathUrl;
         }
 

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Azure.Storage.Blobs;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -76,15 +74,14 @@ namespace LectorUniversal.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] Book book)
         {
-            if (book.TypeofBook == BoBookTypes.Comic)
+            if (!string.IsNullOrWhiteSpace(book.Cover))
             {
-                if (!string.IsNullOrWhiteSpace(book.Cover))
-                {
-                    string folder = $"Comics/{book.Name.Replace(" ", "-")}";
-                    var coverPoster = Convert.FromBase64String(book.Cover);
-                    book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg", folder);
-                }
+                string folder = $"{book.Name.Replace(" ", "-")}";
+                var coverPoster = Convert.FromBase64String(book.Cover);
+                var bookType = Enum.GetName(book.TypeofBook);
+                book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg",bookType, folder);
             }
+
             _db.Add(book);
             await _db.SaveChangesAsync();
             return Ok(book);
@@ -93,23 +90,27 @@ namespace LectorUniversal.Server.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(Book book)
         {
-            var bookDB = await _db.Books.FirstOrDefaultAsync(x => x.Id == book.Id);
+            var bookDB = await _db.Books.AsNoTracking().FirstOrDefaultAsync(x => x.Id == book.Id);
 
             if (bookDB == null) { return NotFound(); }
 
             bookDB = _mapper.Map(book, bookDB);
+            
 
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
                 var coverImage = Convert.FromBase64String(book.Cover);
-                var folder = $"Comics/{bookDB.Name.Replace(" ", "-")}";
-                bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover);
+                var folder = $"{bookDB.Name.Replace(" ", "-")}";
+                var bookType = Enum.GetName(bookDB.TypeofBook);
+                  bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover, bookType);
             }
 
             await _db.Database.ExecuteSqlInterpolatedAsync($"delete from GenderBooks WHERE BookId = {book.Id};");
 
             bookDB.Genders = book.Genders;
 
+            _db.Attach(bookDB).State = EntityState.Modified;
+            await _db.GenderBooks.AddRangeAsync(bookDB.Genders);
             await _db.SaveChangesAsync();
             return NoContent();
         }
@@ -117,15 +118,15 @@ namespace LectorUniversal.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var exits = await _db.Books.AnyAsync(x => x.Id == id);
+            var exits = await _db.Books.AsNoTracking().AnyAsync(x => x.Id == id);
             if (!exits) { return NotFound(); }
 
-            var book = await _db.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
-            var folder = "Comics/"+book.Name.Replace(" ", "-");
-            await _fileUpload.DeleteFile(folder, book.Cover);
+            var book = await _db.Books.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var folder = book.Name.Replace(" ", "-");
+            var bookType = Enum.GetName(book.TypeofBook);
+            await _fileUpload.DeleteFile(folder,bookType, book.Cover);
 
-            _db.Remove(book);
-            //new Book { Id = id }
+            _db.Remove(new Book { Id = id });
             await _db.SaveChangesAsync();
             return NoContent();
         }
