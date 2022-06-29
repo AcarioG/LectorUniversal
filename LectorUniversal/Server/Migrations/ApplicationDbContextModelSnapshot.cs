@@ -105,7 +105,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys");
+                    b.ToTable("Keys", (string)null);
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -256,7 +256,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.BooksGender", b =>
@@ -271,7 +271,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("GenderBooks");
+                    b.ToTable("GenderBooks", (string)null);
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Chapter", b =>
@@ -299,7 +299,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("BooksId");
 
-                    b.ToTable("Chapters");
+                    b.ToTable("Chapters", (string)null);
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Gender", b =>
@@ -322,7 +322,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genders");
+                    b.ToTable("Genders", (string)null);
                 });
 
             modelBuilder.Entity("LectorUniversal.Shared.Pages", b =>
@@ -343,7 +343,7 @@ namespace LectorUniversal.Server.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.ToTable("Pages");
+                    b.ToTable("Pages", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

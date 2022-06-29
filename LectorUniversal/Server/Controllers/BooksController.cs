@@ -102,7 +102,7 @@ namespace LectorUniversal.Server.Controllers
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
                 var coverImage = Convert.FromBase64String(book.Cover);
-                var folder = $"Comics/{book.Name.Replace(" ", "-")}";
+                var folder = $"Comics/{bookDB.Name.Replace(" ", "-")}";
                 bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover);
             }
 
@@ -110,7 +110,6 @@ namespace LectorUniversal.Server.Controllers
 
             bookDB.Genders = book.Genders;
 
-            
             await _db.SaveChangesAsync();
             return NoContent();
         }

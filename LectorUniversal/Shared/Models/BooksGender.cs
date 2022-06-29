@@ -8,7 +8,9 @@ namespace LectorUniversal.Shared
     {
         public int? BookId { get; set; }
         public int? GenderId { get; set; }
+        [JsonIgnore]
         public virtual Book? Book { get; set; }
+        [JsonIgnore]
         public virtual Gender? Gender { get; set; }
     }
 }

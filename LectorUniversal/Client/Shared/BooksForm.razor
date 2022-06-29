@@ -60,7 +60,7 @@
         if (!string.IsNullOrWhiteSpace(Book.Cover))
         {
             ImageTemp = Book.Cover;
-            Book.Cover = null;  
+            //Book.Cover = null;  
         }
         else
         {
@@ -76,7 +76,7 @@
 
     private async Task OnDataAnnotationsValidated()
     {
-        Book.Genders = Selected.Select(x => new BooksGender { GenderId = int.Parse(x.Key) }).ToList();
+        Book.Genders = Selected.Select(x => new BooksGender { BookId = Book.Id, GenderId = int.Parse(x.Key) }).ToList();
 
         await OnValidSubmit.InvokeAsync(null);
     }
