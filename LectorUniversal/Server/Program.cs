@@ -4,6 +4,7 @@ using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,11 +16,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+    .AddProfileService<IdentityProfileService>();
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
@@ -32,7 +35,6 @@ builder.Services.AddAutoMapper(conf =>
     conf.CreateMap<Book, Book>().ForMember(x => x.Cover, opt => opt.Ignore());
     conf.CreateMap<Pages, Pages>().ForMember(x => x.ImageUrl, opt => opt.Ignore());
 }, typeof(StartupBase));
-//builder.Services.AddAutoMapper(typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 //builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
@@ -62,14 +64,15 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.MapRazorPages();
-app.MapControllers();
-app.MapFallbackToFile("index.html");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
+});
 
 app.Run();
