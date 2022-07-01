@@ -65,11 +65,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-<<<<<<< HEAD
-=======
 
-
->>>>>>> RoleAdmin added
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();

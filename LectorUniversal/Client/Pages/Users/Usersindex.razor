@@ -1,0 +1,42 @@
+﻿@page "/users"
+@inject IRepository repository
+@inject IShowMessages showMessages
+
+<h3>Users</h3>
+
+        <MudTable Items="Users" Hover="true">
+            @*<HeadContent>
+                
+            </HeadContent>*@
+            <RowTemplate>
+                @foreach (var item in Users)
+                {
+                    <MudTd DataLabel="UserName">@item.UserName</MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+
+@code {
+
+    List<UserDTO> Users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        var httpResponse = await repository.Get<List<UserDTO>>($"api/users");
+
+        if (httpResponse.Error)
+        {
+            await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+        }
+        else
+        {
+            Users = httpResponse.Response;
+        }
+    }
+
+}
