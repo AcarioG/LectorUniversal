@@ -2,6 +2,7 @@
 using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -19,6 +20,16 @@ namespace LectorUniversal.Server.Data
             builder.Entity<BooksGender>().HasKey(g => new { g.GenderId, g.BookId });
             builder.Entity<Book>().HasMany(c => c.Chapters).WithOne(b => b.Books).HasForeignKey(b => b.BooksId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Chapter>().HasMany(p => p.ChapterPages).WithOne(c => c.Chapter).HasForeignKey(c => c.ChapterId).OnDelete(DeleteBehavior.Cascade);
+
+
+            var roleAdmin = new IdentityRole()
+            { Id = Guid.NewGuid().ToString(), Name = "admin", NormalizedName = "admin" };
+
+            builder.Entity<IdentityRole>().HasData(roleAdmin);
+
+
+
+
 
             base.OnModelCreating(builder);
         }

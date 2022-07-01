@@ -6,6 +6,7 @@ using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,11 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> RoleAdmin added
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
