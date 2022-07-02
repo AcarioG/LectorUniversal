@@ -12,7 +12,7 @@
                 <InputSelect @bind-Value=@Chapter.BooksId>
                     @foreach (var item in Books)
                     {
-                        <option value="@item.Key">@item.Value</option>
+                        <option value="@item.Key" selected="@item.Key">@item.Value</option>
                     }
                 </InputSelect>
                 @*<BookSelector Books="Books" ></BookSelector>*@
