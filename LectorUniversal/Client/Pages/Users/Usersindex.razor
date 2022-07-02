@@ -3,19 +3,18 @@
 @inject IShowMessages showMessages
 
 <h3>Users</h3>
-
-        <MudTable Items="Users" Hover="true">
-            @*<HeadContent>
-                
-            </HeadContent>*@
-            <RowTemplate>
-                @foreach (var item in Users)
-                {
-                    <MudTd DataLabel="UserName">@item.UserName</MudTd>
-                }
+    <MudContainer  Class="d-flex justify-center align-center">
+        <MudTable Items="Users" Hover="true" Class="col-sm-4" >
+            <HeaderContent>
+                <MudTh></MudTh>
+                <MudTh Style="text-align:center">Users</MudTh>
+            </HeaderContent>
+            <RowTemplate >
+                <MudTd><MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="authentication/profile" Color="Color.Warning" Size="Size.Small"></MudIconButton></MudTd>
+                <MudTd DataLabel="UserName" Style="text-align:left" >@context.UserName</MudTd>
             </RowTemplate>
         </MudTable>
-
+    </MudContainer>
 @code {
 
     List<UserDTO> Users;

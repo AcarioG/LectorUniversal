@@ -2,9 +2,9 @@
 @inject IRepository repository
 @inject IShowMessages showMessages
 
-<h3>IndexGender</h3>
+<h3>Indice de Generos</h3>
 
-<a class="btn btn-success" href="genders/create">Crear Genero</a>
+<MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" />
 
 <div>
     <GenericList Lists="Genders">
@@ -22,8 +22,9 @@
                        {
                            <tr>
                                <td>
-                                   <a href="/genders/edit/@item.Id" class="btn btn-success">Editar</a>
-                                   <button onclick="@(() => DeleteGender(item))" class="btn btn-danger">Borrar</button>
+                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@($"/genders/edit/{item.Id}")" Color="Color.Warning" Size="Size.Small"></MudIconButton>
+                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
+                                        @onclick="(() => DeleteGender(item))" Size="Size.Small" Style="" ></MudIconButton>
                                </td>
                                <td>@item.Name</td>
                            </tr>    

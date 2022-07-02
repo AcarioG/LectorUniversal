@@ -1,13 +1,13 @@
 ﻿<EditForm Model="Gender" OnSubmit="OnValidSubmit">
-    <div class="col-md-5">
+    <div class="col-md-3">
         <div class="form-group">
-            <label>Nombre:</label>
             <div>
-                <InputText class="form=control" @bind-Value="@Gender.Name"/>
+                <MudTextField @bind-Value="@Gender.Name" Label="Genero" Variant="Variant.Text"></MudTextField>
             </div>
         </div>
+    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Success" ButtonType="ButtonType.Submit">Enviar</MudButton>
+
     </div>
-    <button class="btn btn-success" type="submit">Submit</button>
 </EditForm>
 
 @code {
