@@ -5,14 +5,14 @@
 <h3>Users</h3>
 
     <MudContainer  Class="d-flex justify-center align-center">
-        <MudTable Items="Users" Hover="true" Class="col-sm-4" >
+        <MudTable Items="Users" Hover="true" Class="col-sm-4" Striped="true" Bordered="true" Dense="true">
             <HeaderContent>
-                <MudTh></MudTh>
                 <MudTh Style="text-align:center">Users</MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
-            <RowTemplate >
-                <MudTd><MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="authentication/profile" Color="Color.Warning" Size="Size.Small"></MudIconButton></MudTd>
+            <RowTemplate>
                 <MudTd DataLabel="UserName" Style="text-align:left" >@context.UserName</MudTd>
+                <MudTd><MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@($"user/edit/{context.UserId}")" Color="Color.Warning" Size="Size.Small"></MudIconButton></MudTd>
             </RowTemplate>
         </MudTable>
     </MudContainer>

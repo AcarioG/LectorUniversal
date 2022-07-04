@@ -26,14 +26,14 @@ namespace LectorUniversal.Server.Helpers
             return Task.FromResult(0);
         }
 
-        public async Task<string> EditFile(byte[] content, string extention, string Folder, string ImgUrl, string Type)
+        public async Task<string> EditFile(byte[] content, string extention, string actualFolder,string newFolder, string ImgUrl, string Type)
         {
             if (!string.IsNullOrEmpty(ImgUrl))
             {
-                await DeleteFile(ImgUrl, Type, Folder);
+                await DeleteFile(actualFolder, Type ,ImgUrl);
             }
 
-            return await SaveFile(content, extention, Type, Folder);
+            return await SaveFile(content, extention, Type, newFolder);
         }
 
         public async Task<string> SaveFile(byte[] content, string extention, string Type, string Folder)

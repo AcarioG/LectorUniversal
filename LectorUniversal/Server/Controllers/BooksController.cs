@@ -94,17 +94,17 @@ namespace LectorUniversal.Server.Controllers
 
             if (bookDB == null) { return NotFound(); }
 
-            bookDB = _mapper.Map(book, bookDB);
-            
-
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
                 var coverImage = Convert.FromBase64String(book.Cover);
-                var folder = $"{bookDB.Name.Replace(" ", "-")}";
+                var actualfolder = $"{bookDB.Name.Replace(" ", "-")}";
+                var newfolder = $"{book.Name.Replace(" ", "-")}";
                 var bookType = Enum.GetName(bookDB.TypeofBook);
-                  bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", folder, bookDB.Cover, bookType);
+                bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", actualfolder, newfolder, bookDB.Cover, bookType);
             }
 
+            bookDB = _mapper.Map(book, bookDB);
+            
             await _db.Database.ExecuteSqlInterpolatedAsync($"delete from GenderBooks WHERE BookId = {book.Id};");
 
             bookDB.Genders = book.Genders;

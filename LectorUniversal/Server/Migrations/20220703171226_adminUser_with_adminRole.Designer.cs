@@ -4,6 +4,7 @@ using LectorUniversal.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LectorUniversal.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220703171226_adminUser_with_adminRole")]
+    partial class adminUser_with_adminRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,16 +397,9 @@ namespace LectorUniversal.Server.Migrations
                         new
                         {
                             Id = "6964fafb-f35f-4e02-b54b-c88aae976d0a",
-                            ConcurrencyStamp = "06dd6ea1-f60b-4027-8060-d4b6e0fba349",
+                            ConcurrencyStamp = "e6f50230-61c4-4758-8118-1c9e8f545625",
                             Name = "admin",
                             NormalizedName = "admin"
-                        },
-                        new
-                        {
-                            Id = "7f9f3a7e-9bc6-4b14-943f-bf924b00f05d",
-                            ConcurrencyStamp = "692f78a3-70f1-45b3-a489-69ef3fbade31",
-                            Name = "default",
-                            NormalizedName = "default"
                         });
                 });
 

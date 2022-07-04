@@ -1,22 +1,20 @@
-﻿<EditForm Model="Chapter" OnSubmit="OnValidSubmit">
+﻿@inject IShowMessages showMessage
+
+<EditForm Model="Chapter" OnSubmit="OnDataAnnotationsValidated">
     <div class="col-md-5">
         <div class="form-group col-md-5">
+            @*<MudSelect T="BooksList" @bind-Value=@comicSelected Label="Comics">
+                    <MudSelectItem Value="@Books.Key">@Books.Name</MudSelectItem>
+            </MudSelect>*@
             <label>Comic:</label>
             <div>
-                @*<MudSelect T="selec" Label="Comics" AnchorOrigin="Origin.BottomCenter" @bind-SelectedValues=@Chapter.BooksId>
+                <InputSelect @bind-Value=@comicSelected>
+                    <option value="0">---Seleccione un comic</option>
                     @foreach (var item in Books)
                     {
-                        <MudSelectItem Value="@(item.Key)">@item.Value</MudSelectItem>
-                    }
-                </MudSelect>*@
-                <InputSelect @bind-Value=@Chapter.BooksId>
-                    @foreach (var item in Books)
-                    {
-                        <option value="@item.Key" selected="@item.Key">@item.Value</option>
+                      <option value="@item.Key">@item.Value</option>
                     }
                 </InputSelect>
-                @*<BookSelector Books="Books" ></BookSelector>*@
-                @*<MudNumericField @bind-Value=@Chapter.BooksId></MudNumericField>*@
             </div>
         </div>
         <div class="form-group col-md-5">
@@ -25,13 +23,6 @@
                 <InputText class=form-control @bind-Value=@Chapter.Title></InputText>
             </div>
         </div>
-        
-        @*<div class="form-group col-md-5">
-            <label>Book ID:</label>
-            <div>
-                <InputNumber class=form-control @bind-Value=@Chapter.></InputNumber>
-            </div>
-        </div>*@
         <div class="form-group col-md-5">
             <MultipleImages Label="Pages" ImageSelected="ImageSelected"/>
         </div>
@@ -55,12 +46,13 @@
 </EditForm>
 
 @code {
-    [Parameter] public Chapter Chapter {  get;  set; }
+
     [Parameter] public int IdBook { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
+    [Parameter]public Chapter Chapter {  get;  set; }
     private string Images;
-    //private string ImageTemp;
+    private string comicSelected = "0";
 
     private List<MultipleSelectorModel> Books { get; set; } = new List<MultipleSelectorModel>();
 
@@ -76,14 +68,22 @@
         {
             Images = item;
         }
-        
+
         Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
 
-    // private async Task OnDataAnnotationsValidated()
-    //{
-    //   // Chapter.BookId = Books.Select(x => new Chapter { BookId = int.Parse(x.Key) }).FirstOrDefault();
+    private async Task OnDataAnnotationsValidated()
+    {
+        if (comicSelected == "0")
+        {
+            await showMessage.ShowErrorMessage("Debe seleccionar un Comic");
+            return;
+        }
+        Chapter.BooksId = int.Parse(comicSelected);
 
-    //    await OnValidSubmit.InvokeAsync(null);
-    //}
+        // Chapter.BookId = Books.Select(x => new Chapter { BookId = int.Parse(x.Key) }).FirstOrDefault();
+
+        await OnValidSubmit.InvokeAsync(null);
+        await showMessage.ShowSuccessMessage("Capitulo creado exitosamente!");
+    }
 }

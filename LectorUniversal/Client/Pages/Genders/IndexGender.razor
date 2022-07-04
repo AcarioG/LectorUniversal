@@ -4,13 +4,41 @@
 
 <h3>Indice de Generos</h3>
 
-<MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" />
+<MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" Size="Size.Medium" Style="margin-left:160px; margin-top:40px;" />
 
 <div>
     <GenericList Lists="Genders">
         <CompleteRecordsFound>
-            <div class="col-md-7">
-                <table class="table table-striped">
+            <div class="col-md-10" style="margin-left:160px; margin-top:40px;">
+                <MudSimpleTable Dense="true" Hover="true" Bordered="true" Style="">
+                    <thead>
+                        <tr  style="background-color:lightgray">
+                            <th><b>Generos</b></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var gender in Genders)
+                        {
+                            <tr>
+                                <td>@gender.Name</td>
+                                <td>
+                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" 
+                                        Href="@($"/genders/edit/{gender.Id}")" Color="Color.Warning" Size="Size.Small" ></MudIconButton>
+                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
+                                        @onclick="(() => DeleteGender(gender))" Size="Size.Small" ></MudIconButton>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </div>
+        </CompleteRecordsFound>
+    </GenericList>
+</div>
+
+
+@*<table class="table table-striped">
                     <thead>
                         <tr>
                             <th></th>
@@ -22,9 +50,7 @@
                        {
                            <tr>
                                <td>
-                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@($"/genders/edit/{item.Id}")" Color="Color.Warning" Size="Size.Small"></MudIconButton>
-                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
-                                        @onclick="(() => DeleteGender(item))" Size="Size.Small" Style="" ></MudIconButton>
+                                   
                                </td>
                                <td>@item.Name</td>
                            </tr>    
@@ -32,11 +58,7 @@
                    
                     </tbody>
                 </table>
-            </div>
-        </CompleteRecordsFound>
-    </GenericList>
-</div>
-
+*@
 @code {
     public List<Gender> Genders {get; set; }
 

@@ -1,13 +1,19 @@
-﻿@inject IJSRuntime js
-@inject IRepository repository
+﻿@inject IRepository repository
 @inject IShowMessages showMessages
+@inject IDialogService dialogService
 
+
+
+<div class="form-group" style="margin-top:50px;">
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Href="books/create" Label="Agregar Comic" Size="Size.Medium" />
+</div>
 <div style="display: flex; flex-wrap: wrap; align-items:center;">
     <GenericList Lists="Books">
         <RecordFound Context="book" >
             <IndividualBook Books="book" DeleteBook="DeleteBook" />
         </RecordFound>
     </GenericList>
+    
 </div>
 
 @code {
@@ -15,8 +21,14 @@
 
     async Task DeleteBook(Book book)
     {
-        bool confirmed = await js.InvokeAsync<bool>("confirm", "Esta seguro que desea eliminar este Comic?");
-        if (confirmed)
+        //var parameters = new DialogParameters();
+        //parameters.Add("DialogContent", $"Esta seguro que desea eliminar el comic de {book.Name}?");
+
+        var options = new DialogOptions { CloseButton = false, CloseOnEscapeKey = true, Position = DialogPosition.Center };
+        var dialog = dialogService.Show<GeneralDialog>("Elimando Comic", options);
+        var result = await dialog.Result;
+        //js.InvokeAsync<bool>("confirm", "Esta seguro que desea eliminar este Comic?");
+        if (!result.Cancelled)
         {
             var responseHttp = await repository.Delete($"api/books/{book.Id}");
             if (responseHttp.Error)
@@ -26,8 +38,8 @@
             else
             {
                 Books.Remove(book);
+                await showMessages.ShowSuccessMessage($"Comic de {book.Name} eliminado");
             }
-            Console.WriteLine($"Se ha eliminado el comic {book.Name}");
         }
     }
 }

@@ -1,0 +1,80 @@
+﻿@page "/user/edit/{UserId}"
+@inject IRepository repository
+@inject IShowMessages showMessages
+
+<h3>EditUser</h3>
+@*<MudTable Items="roles" Hover="true">
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Role</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudSwitch @bind-Checked=@rolSeleccionado></MudSwitch></MudTd>
+        <MudTd>@context.Name</MudTd>
+    </RowTemplate>
+</MudTable>*@
+
+<div class="form-inline">
+
+    <select class="form-control mb-2 mr-sm-2" @bind="rolSeleccionado">
+        <option value="0">--Seleccione un rol--</option>
+        @foreach (var rol in roles)
+        {
+            <option value="@rol.Name">@rol.Name</option>
+        }
+    </select>
+
+    <button  class="btn btn-info mb-2 mr-sm-2" @onclick="AsignRole">Asignar Rol</button>
+    <button class="btn btn-danger mb-2 mr-sm-2" @onclick="RemoveRole">Remover Rol</button>
+</div>
+
+@code {
+        [Parameter] public string UserId { get; set; }
+        private List<RolDTO> roles = new List<RolDTO>();
+        private string rolSeleccionado = "0";
+
+        protected override async Task OnInitializedAsync()
+        {
+            var httpResponse = await repository.Get<List<RolDTO>>("api/users/roles");
+
+            if (httpResponse.Error)
+            {
+                await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+            }
+            else
+            {
+                roles = httpResponse.Response;
+            }
+        }
+
+        private async Task AsignRole()
+        {
+            await EditRole("api/users/asignRole");
+        }
+
+        private async Task RemoveRole()
+        {
+            await EditRole("api/users/removeRole");
+        }
+
+        private async Task EditRole(string url)
+        {
+            if (rolSeleccionado == "0")
+            {
+                await showMessages.ShowErrorMessage("Debe seleccionar un rol");
+                return;
+            }
+            var rolDTO = new EditRoleDTO() { RoleId = rolSeleccionado, UserId = UserId };
+
+            var httpResponse = await repository.Post<EditRoleDTO>(url, rolDTO);
+
+            if (httpResponse.Error)
+            {
+                await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+            }
+            else
+            {
+                await showMessages.ShowSuccessMessage("Operación realizada");
+            }
+        }
+}

@@ -23,10 +23,10 @@
 
 
 @code {
-    private bool MostrarForm { get; set; } = false;
     [Parameter] public int Id { get; set; }
     VisualiseBookDTO model;
     List<Pages> ChapterPages;
+    private bool MostrarForm { get; set; } = false;
 
     protected async override Task OnInitializedAsync()
     {

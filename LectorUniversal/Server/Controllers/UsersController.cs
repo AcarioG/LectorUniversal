@@ -43,7 +43,7 @@ namespace LectorUniversal.Server.Controllers
                 .Select(x => new RoleDTO { Name = x.Name, RoleId = x.Id }).ToListAsync();
         }
 
-        [HttpPost("asignarRol")]
+        [HttpPost("asignRole")]
         public async Task<ActionResult> AsignRoleUser(EditRoleDTO editRoleDTO)
         {
             var user = await userManager.FindByIdAsync(editRoleDTO.UserId);
@@ -51,7 +51,7 @@ namespace LectorUniversal.Server.Controllers
             return NoContent();
         }
 
-        [HttpPost("removerRol")]
+        [HttpPost("removeRole")]
         public async Task<ActionResult> RemoveUserRole(EditRoleDTO editRoleDTO)
         {
             var user = await userManager.FindByIdAsync(editRoleDTO.UserId);

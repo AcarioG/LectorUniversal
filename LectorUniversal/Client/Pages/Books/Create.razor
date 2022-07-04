@@ -46,6 +46,7 @@ else
             //var bookId = httpResponse.Response;
             //navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-")}");
             navigationManager.NavigateTo($"books/");
+            await showMessages.ShowSuccessMessage("Comic creado con exito");
         }
     }
 }
