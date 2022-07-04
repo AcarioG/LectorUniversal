@@ -25,7 +25,7 @@
         //parameters.Add("DialogContent", $"Esta seguro que desea eliminar el comic de {book.Name}?");
 
         var options = new DialogOptions { CloseButton = false, CloseOnEscapeKey = true, Position = DialogPosition.Center };
-        var dialog = dialogService.Show<GeneralDialog>("Elimando Comic", options);
+        var dialog = dialogService.Show<DeleteComicDialog>("Elimando Comic", options);
         var result = await dialog.Result;
         //js.InvokeAsync<bool>("confirm", "Esta seguro que desea eliminar este Comic?");
         if (!result.Cancelled)

@@ -13,24 +13,37 @@ namespace LectorUniversal.Server.Helpers
             _contextAccessor = httpContextAccessor;
         }
 
-        public Task DeleteFile(string Folder,string Type, string ImgUrl)
+        public Task DeleteFile(string Folder,string Type, string ImgUrl, bool complete)
         {
-            var filename = Path.GetFileName(ImgUrl);
-            string directory = Path.Combine(_webHostEnvironment.WebRootPath, Type, Folder, filename);
+            string directory;
 
-            if (File.Exists(directory))
+            if (complete != true)
             {
-                File.Delete(directory);
+                var filename = Path.GetFileName(ImgUrl);
+                directory = Path.Combine(_webHostEnvironment.WebRootPath, Type, Folder, filename);
+               
+                if (File.Exists(directory))
+                {
+                    File.Delete(directory);
+                }
             }
+            else
+            {
+                directory = Path.Combine(_webHostEnvironment.WebRootPath, Type, Folder);
+
+                Directory.Delete(directory, true);
+            }
+
+            
 
             return Task.FromResult(0);
         }
 
-        public async Task<string> EditFile(byte[] content, string extention, string actualFolder,string newFolder, string ImgUrl, string Type)
+        public async Task<string> EditFile(byte[] content, string extention, string actualFolder,string newFolder, string ImgUrl, string Type, bool complete)
         {
             if (!string.IsNullOrEmpty(ImgUrl))
             {
-                await DeleteFile(actualFolder, Type ,ImgUrl);
+                await DeleteFile(actualFolder, Type ,ImgUrl, complete);
             }
 
             return await SaveFile(content, extention, Type, newFolder);

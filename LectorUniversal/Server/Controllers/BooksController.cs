@@ -100,7 +100,8 @@ namespace LectorUniversal.Server.Controllers
                 var actualfolder = $"{bookDB.Name.Replace(" ", "-")}";
                 var newfolder = $"{book.Name.Replace(" ", "-")}";
                 var bookType = Enum.GetName(bookDB.TypeofBook);
-                bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", actualfolder, newfolder, bookDB.Cover, bookType);
+                bool complete = false;
+                bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", actualfolder, newfolder, bookDB.Cover, bookType, complete);
             }
 
             bookDB = _mapper.Map(book, bookDB);
@@ -124,7 +125,8 @@ namespace LectorUniversal.Server.Controllers
             var book = await _db.Books.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
             var folder = book.Name.Replace(" ", "-");
             var bookType = Enum.GetName(book.TypeofBook);
-            await _fileUpload.DeleteFile(folder,bookType, book.Cover);
+            bool complete = true;
+            await _fileUpload.DeleteFile(folder,bookType, book.Cover, complete);
 
             _db.Remove(new Book { Id = id });
             await _db.SaveChangesAsync();
