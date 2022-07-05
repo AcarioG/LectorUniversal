@@ -3,6 +3,7 @@ using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class ChaptersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -31,6 +33,7 @@ namespace LectorUniversal.Server.Controllers
         }
 
         [HttpGet("viewer/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
         {
             List<Chapter> chapter = new List<Chapter>();

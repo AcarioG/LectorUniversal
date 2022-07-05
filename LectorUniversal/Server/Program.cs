@@ -19,15 +19,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.Configure<JwtSecurityTokenHandler>(op => op.InboundClaimTypeMap.Clear());
-
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
     .AddProfileService<IdentityProfileService>();
+
+
+builder.Services.Configure<JwtSecurityTokenHandler>(options => 
+    {
+        var validator = new JwtSecurityTokenHandler();
+
+        validator.InboundClaimTypeMap = new Dictionary<string, string>();
+        validator.OutboundClaimTypeMap = new Dictionary<string, string>();
+    });
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
@@ -47,6 +55,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 

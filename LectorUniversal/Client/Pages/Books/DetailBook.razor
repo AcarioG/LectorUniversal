@@ -22,7 +22,7 @@ else
         @foreach (var item in model.Chapters)
        {
            <ul class="list-group">
-                <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
+                <MudLink Href="@($"chapters/viewer/{item.Id}" )" Underline="Underline.None">
                   <li class="list-group-item">
                     @item.Title
             
@@ -41,7 +41,7 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}");
+        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}", includeToken:false);
 
         if (responseHttp.Error)
         {

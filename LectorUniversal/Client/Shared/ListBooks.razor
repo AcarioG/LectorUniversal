@@ -2,13 +2,14 @@
 @inject IShowMessages showMessages
 @inject IDialogService dialogService
 
-
 <AuthorizeView Roles="admin">
+    <Authorized>
         <div class="form-group" style="margin-top:50px;">
             <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Href="books/create" Label="Agregar Comic" Size="Size.Medium" />
         </div>
+    </Authorized>
 </AuthorizeView>
-
+        
 <div style="display: flex; flex-wrap: wrap; align-items:center;">
     <GenericList Lists="Books">
         <RecordFound Context="book" >
