@@ -8,11 +8,15 @@
             </MudCardContent>
         </MudCard>
     </MudLink>
-<div class="align-content-center" style="margin-top:10px; margin-left:80px;">
-    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@editUrlBook" Color="Color.Warning" Size="Size.Large"></MudIconButton>
-    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-        @onclick="(() => DeleteBook.InvokeAsync(Books))" Size="Size.Large" Style="" ></MudIconButton>
-</div>
+    <AuthorizeView Roles="admin">
+        <Authorized>
+            <div class="align-content-center" style="margin-top:10px; margin-left:80px;">
+                <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" Href="@editUrlBook" Color="Color.Warning" Size="Size.Large"></MudIconButton>
+                <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                    @onclick="(() => DeleteBook.InvokeAsync(Books))" Size="Size.Large" Style="" ></MudIconButton>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @code {

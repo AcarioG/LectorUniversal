@@ -1,19 +1,30 @@
-﻿using System.Text;
+﻿using LectorUniversal.Client.Helpers;
+using System.Text;
 using System.Text.Json;
 
 namespace LectorUniversal.Client.Repository
 {
     public class Repository : IRepository
     {
-        private readonly HttpClient _httpClient;
-        public Repository(HttpClient httpClient)
+        private readonly HttpClientWithToken _httpClientToken;
+        private readonly HttpClientWithoutToken _httpClientWithoutToken;
+
+        public Repository(HttpClientWithToken httpClientToken, HttpClientWithoutToken httpClientWithoutToken)
         {
-            _httpClient = httpClient;
+            _httpClientToken = httpClientToken;
+            _httpClientWithoutToken = httpClientWithoutToken;
         }
 
-        public async Task<HttpResponseWrapper<T>> Get<T>(string url)
+        public async Task<HttpResponseWrapper<T>> Get<T>(string url, bool includeToken = true)
         {
-            var responseHttp = await _httpClient.GetAsync(url);
+            HttpClient httpClient;
+
+            if (includeToken)
+                httpClient = _httpClientToken.HttpClient;
+            else
+                httpClient = _httpClientWithoutToken.HttpClient;
+
+            var responseHttp = await httpClient.GetAsync(url);
 
             if (responseHttp.IsSuccessStatusCode)
             {
@@ -37,7 +48,7 @@ namespace LectorUniversal.Client.Repository
         {
             var json = JsonSerializer.Serialize(data);
             var context = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(url, context);
+            var response = await _httpClientToken.HttpClient.PostAsync(url, context);
             return new HttpResponseWrapper<object>(null, !response.IsSuccessStatusCode, response);
         }
 
@@ -45,7 +56,7 @@ namespace LectorUniversal.Client.Repository
         {
             var json = JsonSerializer.Serialize(data);
             var context = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(url, context);
+            var response = await _httpClientToken.HttpClient.PutAsync(url, context);
             return new HttpResponseWrapper<object>(null, !response.IsSuccessStatusCode, response);
         }
 
@@ -53,7 +64,7 @@ namespace LectorUniversal.Client.Repository
         {
             var json = JsonSerializer.Serialize(data);
             var context = new StringContent(json, Encoding.UTF8, "application/json");
-            var responseHttp = await _httpClient.PostAsync(url, context);
+            var responseHttp = await _httpClientToken.HttpClient.PostAsync(url, context);
             if (responseHttp.IsSuccessStatusCode)
             {
                 var response = await DeserializeResponse<TResponse>(responseHttp, _serializerOptions);
@@ -67,7 +78,7 @@ namespace LectorUniversal.Client.Repository
 
         public async Task<HttpResponseWrapper<object>> Delete(string url)
         {
-            var responseHttp = await _httpClient.DeleteAsync(url);
+            var responseHttp = await _httpClientToken.HttpClient.DeleteAsync(url);
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
         }
     }
