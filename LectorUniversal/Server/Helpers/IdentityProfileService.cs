@@ -34,7 +34,11 @@ namespace LectorUniversal.Server.Helpers
                 if (claim.Type == JwtClaimTypes.Role)
                 {
                     claimsMapped.Add(new Claim(ClaimTypes.Role, claim.Value));
+                    //Claim newClaim = new Claim(ClaimTypes.Role, claim.Value);
+                    //newClaim.Properties.Add("Description", claim.Value);
+                    //claimsMapped.Add(newClaim);
                 }
+
             }
 
             claims.AddRange(claimsMapped);

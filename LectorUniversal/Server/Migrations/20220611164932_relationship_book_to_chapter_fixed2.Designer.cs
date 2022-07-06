@@ -165,7 +165,7 @@ namespace LectorUniversal.Server.Migrations
                     b.ToTable("PersistedGrants", (string)null);
                 });
 
-            modelBuilder.Entity("LectorUniversal.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("LectorUniversal.Server.Models.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -532,7 +532,7 @@ namespace LectorUniversal.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("LectorUniversal.Server.Models.ApplicationUser", null)
+                    b.HasOne("LectorUniversal.Server.Models.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -541,7 +541,7 @@ namespace LectorUniversal.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("LectorUniversal.Server.Models.ApplicationUser", null)
+                    b.HasOne("LectorUniversal.Server.Models.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -556,7 +556,7 @@ namespace LectorUniversal.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LectorUniversal.Server.Models.ApplicationUser", null)
+                    b.HasOne("LectorUniversal.Server.Models.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -565,7 +565,7 @@ namespace LectorUniversal.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("LectorUniversal.Server.Models.ApplicationUser", null)
+                    b.HasOne("LectorUniversal.Server.Models.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

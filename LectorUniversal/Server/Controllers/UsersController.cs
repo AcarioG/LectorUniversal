@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LectorUniversal.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Role")]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext context;

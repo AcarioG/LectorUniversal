@@ -11,7 +11,7 @@ namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles ="admin")]
+    [Authorize(Roles ="admin")]
     public class BooksController : ControllerBase
     {
         private readonly ApplicationDbContext _db;

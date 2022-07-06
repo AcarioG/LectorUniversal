@@ -11,7 +11,7 @@ namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize(Policy = "Role")]
     public class ChaptersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -25,6 +25,7 @@ namespace LectorUniversal.Server.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var chapters = await _db.Chapters.ToListAsync();

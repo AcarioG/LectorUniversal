@@ -14,6 +14,7 @@ namespace LectorUniversal.Client.Repository
             _httpClientToken = httpClientToken;
             _httpClientWithoutToken = httpClientWithoutToken;
         }
+        private JsonSerializerOptions _serializerOptions = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
 
         public async Task<HttpResponseWrapper<T>> Get<T>(string url, bool includeToken = true)
         {
@@ -36,8 +37,6 @@ namespace LectorUniversal.Client.Repository
                 return new HttpResponseWrapper<T>(default, false, responseHttp);
             }
         }
-        private JsonSerializerOptions _serializerOptions = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true};
-
         private async Task<T> DeserializeResponse<T>(HttpResponseMessage httpResponseMessage, JsonSerializerOptions jsonOptions)
         {
             var responseString = await httpResponseMessage.Content.ReadAsStringAsync();

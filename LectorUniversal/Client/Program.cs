@@ -19,8 +19,8 @@ builder.Services.AddHttpClient<HttpClientWithToken>("LectorUniversal.Private", c
 builder.Services.AddHttpClient<HttpClientWithoutToken>("LectorUniversal.Public", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("LectorUniversal.Public"));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("LectorUniversal.Private"));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("LectorUniversal.Public"));
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IShowMessages, ShowMessages>();
@@ -33,8 +33,8 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.NewestOnTop = false;
     config.SnackbarConfiguration.ShowCloseIcon = false;
     config.SnackbarConfiguration.VisibleStateDuration = 1000;
-    config.SnackbarConfiguration.HideTransitionDuration = 500;
-    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.HideTransitionDuration = 400;
+    config.SnackbarConfiguration.ShowTransitionDuration = 400;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 

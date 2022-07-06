@@ -21,20 +21,24 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
     .AddProfileService<IdentityProfileService>();
 
+builder.Services.AddAuthorization(opt =>
+        {
+            opt.AddPolicy("Role", option =>
+                option.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"));
+        });
 
 builder.Services.Configure<JwtSecurityTokenHandler>(options => 
     {
         var validator = new JwtSecurityTokenHandler();
 
+        validator.InboundClaimTypeMap.Clear();
         validator.InboundClaimTypeMap = new Dictionary<string, string>();
-        validator.OutboundClaimTypeMap = new Dictionary<string, string>();
     });
 
 builder.Services.AddAuthentication()

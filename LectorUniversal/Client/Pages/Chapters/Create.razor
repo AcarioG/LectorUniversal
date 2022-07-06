@@ -2,7 +2,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-
+@attribute [Authorize(Roles ="admin")]
 
 @if (@MostrarForm != false)
 {
@@ -42,6 +42,7 @@ else
         {
             //var bookId = httpResponse.Response;
             navigationManager.NavigateTo("books/");
+            await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
         }
     }
 }

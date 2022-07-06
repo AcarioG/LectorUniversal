@@ -2,6 +2,7 @@
 @inject IRepository repository
 @inject IShowMessages showMessage
 @inject NavigationManager navigationManager
+@attribute [Authorize(Roles ="admin")]
 
 
 @if (Book == null)

@@ -1,6 +1,7 @@
 ﻿@page "/genders"
 @inject IRepository repository
 @inject IShowMessages showMessages
+@attribute [Authorize(Roles = "admin")]
 
 <h3>Indice de Generos</h3>
 
@@ -47,7 +48,7 @@
 
     private async Task LoadGenders()
     {
-        var reponseHttp = await repository.Get<List<Gender>>("api/genders");
+        var reponseHttp = await repository.Get<List<Gender>>("api/genders", includeToken: true);
         Genders = reponseHttp.Response; 
     }
 

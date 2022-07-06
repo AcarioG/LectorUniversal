@@ -1,13 +1,17 @@
 ﻿using LectorUniversal.Server.Data;
 using LectorUniversal.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace LectorUniversal.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Role")]
     public class GendersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;

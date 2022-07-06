@@ -1,6 +1,7 @@
 ﻿@page "/user/edit/{UserId}"
 @inject IRepository repository
 @inject IShowMessages showMessages
+@attribute [Authorize(Roles ="admin")]
 
 <h3>EditUser</h3>
 @*<MudTable Items="roles" Hover="true">
