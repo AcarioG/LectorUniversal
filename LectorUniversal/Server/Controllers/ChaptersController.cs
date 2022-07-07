@@ -9,9 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LectorUniversal.Server.Controllers
 {
+
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "Role")]
     public class ChaptersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;

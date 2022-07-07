@@ -31,7 +31,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/chapters/viewer/{Id}");
+        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/chapters/viewer/{Id}", includeToken:false);
 
         if (responseHttp.Error)
         {

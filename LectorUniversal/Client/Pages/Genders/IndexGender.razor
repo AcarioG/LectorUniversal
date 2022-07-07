@@ -1,6 +1,7 @@
 ﻿@page "/genders"
 @inject IRepository repository
 @inject IShowMessages showMessages
+@inject AuthenticationStateProvider stateProvider
 @attribute [Authorize(Roles = "admin")]
 
 <h3>Indice de Generos</h3>
@@ -41,14 +42,18 @@
 @code {
     public List<Gender> Genders {get; set; }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await LoadGenders(); 
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User.Identity;
+        if (user != null && user.IsAuthenticated )
+        {
+           await LoadGenders();      
+        }
     }
 
     private async Task LoadGenders()
     {
-        var reponseHttp = await repository.Get<List<Gender>>("api/genders", includeToken: true);
+        var reponseHttp = await repository.Get<List<Gender>>("api/genders");
         Genders = reponseHttp.Response; 
     }
 

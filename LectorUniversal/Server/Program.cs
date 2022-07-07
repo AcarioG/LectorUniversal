@@ -12,6 +12,12 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<JwtSecurityTokenHandler>(opt =>
+{
+    opt.InboundClaimTypeMap = new Dictionary<string, string>();
+    opt.OutboundClaimTypeMap = new Dictionary<string, string>();
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("LectorUniversal");
 //var AzureStorageCS = builder.Configuration.GetConnectionString("AzureStorage");
@@ -27,19 +33,19 @@ builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
     .AddProfileService<IdentityProfileService>();
 
-builder.Services.AddAuthorization(opt =>
-        {
-            opt.AddPolicy("Role", option =>
-                option.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"));
-        });
+//builder.Services.AddAuthorization(opt =>
+//        {
+//            opt.AddPolicy("Role", option =>
+//                option.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"));
+//        });
 
-builder.Services.Configure<JwtSecurityTokenHandler>(options => 
-    {
-        var validator = new JwtSecurityTokenHandler();
+//builder.Services.Configure<JwtSecurityTokenHandler>(options => 
+//    {
+//        var validator = new JwtSecurityTokenHandler();
 
-        validator.InboundClaimTypeMap.Clear();
-        validator.InboundClaimTypeMap = new Dictionary<string, string>();
-    });
+//        validator.InboundClaimTypeMap.Clear();
+//        validator.InboundClaimTypeMap = new Dictionary<string, string>();
+//    });
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();

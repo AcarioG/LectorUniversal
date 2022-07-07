@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LectorUniversal.Server.Controllers
 {
+
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "Role")]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext context;

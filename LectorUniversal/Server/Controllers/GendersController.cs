@@ -9,9 +9,10 @@ using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace LectorUniversal.Server.Controllers
 {
+
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "Role")]
     public class GendersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -22,12 +23,14 @@ namespace LectorUniversal.Server.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Gender>>> Get()
         {
             return await _db.Genders.ToListAsync(); 
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Gender>> Get(int id)
         {
             return await _db.Genders.FirstOrDefaultAsync(g => g.Id == id);
