@@ -27,7 +27,7 @@ namespace LectorUniversal.Server.Data
                 { 
                     Id = "6964fafb-f35f-4e02-b54b-c88aae976d0a", 
                     Name = "admin",
-                    NormalizedName = "admin" 
+                    NormalizedName = "admin"
                 };
 
             var defaultRole = new IdentityRole() 
@@ -48,11 +48,6 @@ namespace LectorUniversal.Server.Data
             builder.Entity<IdentityRole>().HasData(roleAdmin,defaultRole);
             builder.Entity<ApplicationUser>().HasData(userAdmin);
             builder.Entity<IdentityUserRole<string>>().HasData(roleUser);
-
-
-
-
-
 
             base.OnModelCreating(builder);
         }

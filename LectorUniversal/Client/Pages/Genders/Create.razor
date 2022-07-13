@@ -1,7 +1,7 @@
 ﻿@page "/genders/create"
 @inject IRepository repository
 @inject NavigationManager navigationManager
-@attribute [Authorize(Roles ="admin")]
+@*@attribute [Authorize(Roles ="admin")]*@
 
 
 <GenderForm OnValidSubmit="CreateGender" Gender="Gender" />

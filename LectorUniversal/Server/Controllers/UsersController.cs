@@ -11,10 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LectorUniversal.Server.Controllers
 {
-
-    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -50,8 +49,10 @@ namespace LectorUniversal.Server.Controllers
         public async Task<ActionResult> AsignRoleUser(EditRoleDTO editRoleDTO)
         {
             var user = await userManager.FindByIdAsync(editRoleDTO.UserId);
-            await userManager.AddToRoleAsync(user, editRoleDTO.RoleId);
-            return NoContent();
+            //var role = await roleManager.FindByIdAsync(editRoleDTO.RoleId);
+            //if (!await userManager.IsInRoleAsync(user,editRoleDTO))
+                await userManager.AddToRoleAsync(user, editRoleDTO.RoleId);
+            return Ok(user);
         }
 
         [HttpPost("removeRole")]
@@ -59,7 +60,7 @@ namespace LectorUniversal.Server.Controllers
         {
             var user = await userManager.FindByIdAsync(editRoleDTO.UserId);
             await userManager.RemoveFromRoleAsync(user, editRoleDTO.RoleId);
-            return NoContent();
+            return Ok(user);
         }
     }
 }

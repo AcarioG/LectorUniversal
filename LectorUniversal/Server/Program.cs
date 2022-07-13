@@ -1,3 +1,4 @@
+using Duende.IdentityServer.Services;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
 using LectorUniversal.Server.Models;
@@ -8,44 +9,33 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtSecurityTokenHandler>(opt =>
 {
-    opt.InboundClaimTypeMap = new Dictionary<string, string>();
-    opt.OutboundClaimTypeMap = new Dictionary<string, string>();
+    opt.InboundClaimTypeMap.Clear();
+     
 });
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("LectorUniversal");
 //var AzureStorageCS = builder.Configuration.GetConnectionString("AzureStorage");
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
-    .AddProfileService<IdentityProfileService>();
-
-//builder.Services.AddAuthorization(opt =>
-//        {
-//            opt.AddPolicy("Role", option =>
-//                option.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"));
-//        });
-
-//builder.Services.Configure<JwtSecurityTokenHandler>(options => 
-//    {
-//        var validator = new JwtSecurityTokenHandler();
-
-//        validator.InboundClaimTypeMap.Clear();
-//        validator.InboundClaimTypeMap = new Dictionary<string, string>();
-//    });
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
@@ -60,6 +50,7 @@ builder.Services.AddAutoMapper(conf =>
 }, typeof(StartupBase));
 
 builder.Services.AddScoped<IFileUpload, FileUpload>();
+builder.Services.AddTransient<IProfileService, IdentityProfileService>();
 //builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
 builder.Services.AddHttpContextAccessor();
 
@@ -91,8 +82,8 @@ app.UseRouting();
 
 //app.UseMiddleware<JwtSecurityTokenHandler>();
 
-app.UseIdentityServer();
 app.UseAuthentication();
+app.UseIdentityServer();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

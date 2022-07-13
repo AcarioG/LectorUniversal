@@ -2,7 +2,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-@attribute [Authorize(Roles ="admin")]
+@*@attribute [Authorize(Roles ="admin")]*@
 
 
 <h3>Create</h3>
@@ -25,7 +25,7 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        var responseHttp = await repository.Get<List<Gender>>("api/genders",includeToken:true);
+        var responseHttp = await repository.Get<List<Gender>>("api/genders");
         GendersNotSelected = responseHttp.Response;
 
         StateHasChanged();

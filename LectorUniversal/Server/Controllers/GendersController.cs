@@ -10,7 +10,7 @@ using static Duende.IdentityServer.Models.IdentityResources;
 namespace LectorUniversal.Server.Controllers
 {
 
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class GendersController : ControllerBase

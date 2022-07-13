@@ -1,7 +1,7 @@
 ﻿@page "/user/edit/{UserId}"
 @inject IRepository repository
 @inject IShowMessages showMessages
-@attribute [Authorize(Roles ="admin")]
+@*@attribute [Authorize(Roles ="admin")]*@
 
 <h3>EditUser</h3>
 @*<MudTable Items="roles" Hover="true">
@@ -31,12 +31,12 @@
 
 @code {
         [Parameter] public string UserId { get; set; }
-        private List<RolDTO> roles = new List<RolDTO>();
+        private List<RoleDTO> roles = new List<RoleDTO>();
         private string rolSeleccionado = "0";
 
         protected override async Task OnInitializedAsync()
         {
-            var httpResponse = await repository.Get<List<RolDTO>>("api/users/roles");
+            var httpResponse = await repository.Get<List<RoleDTO>>("api/users/roles");
 
             if (httpResponse.Error)
             {

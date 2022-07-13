@@ -11,10 +11,13 @@
     <div>
         @*<img src="@model.Chapters.Select(x => x.ChapterPages.Select(c => c.ImageUrl))">*@
     </div>
-    @foreach (var item in ChapterPages)
-    {
-        <img src="@item.ImageUrl" height="1200" width="750" />
-    }
+    <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px;" >
+        @foreach (var item in ChapterPages)
+        {
+            
+            <img src="@item.ImageUrl" height="1200" width="750" />
+        }
+    </MudStack>
 }else
 {
     <text>no hay registros</text>

@@ -2,12 +2,11 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-@attribute [Authorize(Roles ="admin")]
+@*@attribute [Authorize(Roles ="admin")]*@
 
 @if (@MostrarForm != false)
 {
     <ChapterForm OnValidSubmit="CreateChapter" Chapter="Chapter" BooksList="BooksList" />
-    
 }
 else
 {

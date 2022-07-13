@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LectorUniversal.Shared.DTOs
 {
-    public class RolDTO
-    {
-        public string RoleId { get; set; }
-        public string Name { get; set; }
-    }
+    //public class RolDTO
+    //{
+    //    public string RoleId { get; set; }
+    //    public string Name { get; set; }
+    //}
 }
