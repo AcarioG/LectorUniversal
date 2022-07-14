@@ -27,13 +27,13 @@
             
             <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
             @*<MultipleImages Label="Pages" ImageSelected="ImageSelected"/>*@
-
             
-        </div>
         <MudFab HtmlTag="label"
             Color="Color.Success"
             Icon="@Icons.Filled.AttachFile"
             for="fileInput"/>
+            
+        </div>
         <button type="submit" class="btn btn-success">Submit</button>
         
         
@@ -60,6 +60,7 @@
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
     [Parameter]public Chapter Chapter {  get;  set; }
     private string Images;
+    IList<IBrowserFile> files = new List<IBrowserFile>();
     private string comicSelected = "0";
 
     private List<MultipleSelectorModel> Books { get; set; } = new List<MultipleSelectorModel>();
@@ -70,13 +71,23 @@
         //public void Closed(MudChip chip) => Pages.Remove();
     }
 
-    private void ImageSelected(List<string> ImageBase64)
-    {
-        foreach (var item in ImageBase64)
-        {
-            Images = item;
-        }
+    //private void ImageSelected(List<string> ImageBase64)
+    //{
+    //    foreach (var item in ImageBase64)
+    //    {
+    //        Images = item;
+    //    }
 
+    //    Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
+    //}
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
         Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
 

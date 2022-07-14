@@ -2,15 +2,18 @@
 @using Tewr.Blazor.FileReader
 @inject IFileReaderService fileReaderService
 
-<div class="form-group">
+@*<div class="form-group">
 
     <div class="col-md-4">
         <label>@Label</label>
         <div>
-            @*<input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png" multiple/>
-            <InputFile OnChange="OnFileChange" multiple></InputFile>*@
+            
+            <InputFile id="fileInput" @ref="inputElement" OnChange="UploadFiles" hidden multiple />
             <input type="file" @ref="inputElement" @onchange="ImageFileSelected" accept=".jpg,.jpeg,.png" multiple/>
-
+            <MudFab HtmlTag="label"
+            Color="Color.Success"
+            Icon="@Icons.Filled.AttachFile"
+            for="fileInput"/>
         </div>
     </div>
 
@@ -35,11 +38,11 @@
             </div>
         }
     </div>
-</div>
+</div>*@
 
 @code {
-    [Parameter] public string Label { get; set; } = "Image";
-    [Parameter] public string? ImageTemp { get; set; }
+        [Parameter] public string Label { get; set; } = "Image";
+    //[Parameter] public string? ImageTemp { get; set; }
     private string? ImageBase64;
     Chapter chapter = new Chapter();
     private List<string>? Images = new List<string>(); 
@@ -62,7 +65,21 @@
     //        }
     //    }
     //}
-
+    async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(int.MaxValue))
+        {
+            if(file.ContentType == "image/jpeg" || file.ContentType == "image/jpg")
+            {
+                var resizeImage = await file.RequestImageFileAsync(file.ContentType, 250, 130 );
+                var buffer = new byte[resizeImage.Size];
+                await resizeImage.OpenReadStream().ReadAsync(buffer);
+                Images.Add(Convert.ToBase64String(buffer));
+            }
+            //files.Ad d (f ile);
+        }
+        //TODO upload the files to the server
+    }
     //async Task OnFileChange(InputFileChangeEventArgs e)
     //{
     //    var format = "image/jpg";
@@ -85,7 +102,7 @@
                 memStream.Read(bytesImage, 0, (int)memStream.Length);
                 Images.Add(Convert.ToBase64String(bytesImage));
                 await ImageSelected.InvokeAsync(Images);
-                ImageTemp = null;
+                //ImageTemp = null;
                 //StateHasChanged();
             }
         }
