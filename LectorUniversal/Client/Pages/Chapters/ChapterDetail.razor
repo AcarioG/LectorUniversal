@@ -8,14 +8,10 @@
 
 @if (@MostrarForm != false)
 {
-    <div>
-        @*<img src="@model.Chapters.Select(x => x.ChapterPages.Select(c => c.ImageUrl))">*@
-    </div>
     <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px;" >
         @foreach (var item in ChapterPages)
         {
-            
-            <img src="@item.ImageUrl" height="1200" width="750" />
+            <MudImage Src="@item.ImageUrl" Height="1000" Width="700" />
         }
     </MudStack>
 }else

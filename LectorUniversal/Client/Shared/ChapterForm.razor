@@ -24,8 +24,16 @@
             </div>
         </div>
         <div class="form-group col-md-5">
-            <MultipleImages Label="Pages" ImageSelected="ImageSelected"/>
+            
+            <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+            @*<MultipleImages Label="Pages" ImageSelected="ImageSelected"/>*@
+
+            
         </div>
+        <MudFab HtmlTag="label"
+            Color="Color.Success"
+            Icon="@Icons.Filled.AttachFile"
+            for="fileInput"/>
         <button type="submit" class="btn btn-success">Submit</button>
         
         

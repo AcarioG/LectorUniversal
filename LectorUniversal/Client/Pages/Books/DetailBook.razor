@@ -11,26 +11,24 @@
 }
 else
 {
-    <h2>@model.Book.Name</h2>
-    <MudPaper>
-        <img src="@model.Book.Cover" width="250"/>
-        </MudPaper>
-    <MudDivider  />
+    
+    <MudPaper Outlined="true" >
+        <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
+        @*<MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
+        <text>Hi</text>*@
+    </MudPaper>
     <div class="col-md-6">
         <br/>
         <a href="/chapter/create" class="btn btn-success">Agregar Capitulo</a>
         <br/>
-           @*<ul class="list-group">
-          </ul>*@
         <MudExpansionPanels>
             @foreach (var item in model.Chapters)
             {
-                <MudExpansionPanel Text="@item.Title">
+                <MudExpansionPanel Text="@item.Title" >
                     <MudLink Href="@($"chapters/viewer/{item.Id}" )" Underline="Underline.None">@item.Title</MudLink>
                 </MudExpansionPanel>
             }
-       </MudExpansionPanels>
-        
+        </MudExpansionPanels>
     </div>
 }
 
