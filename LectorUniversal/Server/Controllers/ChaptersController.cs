@@ -66,7 +66,7 @@ namespace LectorUniversal.Server.Controllers
         public async Task<ActionResult<int>> Post([FromBody] Chapter chapter)
         {
             var book = await _db.Books.Where(x => x.Id == chapter.BooksId).FirstOrDefaultAsync();
-                    string folder = $"{book.Name.Replace(" ", "-")}/{chapter.Title.Replace(" ", "-")}";
+            string folder = $"{book.Name.Replace(" ", "-")}/{chapter.Title.Replace(" ", "-")}";
             var bookType = Enum.GetName(book.TypeofBook);
             //Shared.Pages pages = new Shared.Pages();
             List<string> imgUrl = new List<string>();

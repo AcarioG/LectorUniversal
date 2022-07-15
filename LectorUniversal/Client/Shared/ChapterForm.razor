@@ -24,15 +24,7 @@
             </div>
         </div>
         <div class="form-group col-md-5">
-            
-            <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
-            @*<MultipleImages Label="Pages" ImageSelected="ImageSelected"/>*@
-            
-        <MudFab HtmlTag="label"
-            Color="Color.Success"
-            Icon="@Icons.Filled.AttachFile"
-            for="fileInput"/>
-            
+            <MultipleImages Label="Pages" ImageSelected="ImageSelected"/>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
         
@@ -71,25 +63,25 @@
         //public void Closed(MudChip chip) => Pages.Remove();
     }
 
-    //private void ImageSelected(List<string> ImageBase64)
-    //{
-    //    foreach (var item in ImageBase64)
-    //    {
-    //        Images = item;
-    //    }
-
-    //    Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
-    //}
-
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private void ImageSelected(List<string> ImageBase64)
     {
-        foreach (var file in e.GetMultipleFiles())
+        foreach (var item in ImageBase64)
         {
-            files.Add(file);
+            Images = item;
         }
-        //TODO upload the files to the server
+
         Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
+
+    //private void UploadFiles(InputFileChangeEventArgs e)
+    //{
+    //    foreach (var file in e.GetMultipleFiles())
+    //    {
+    //        files.Add(file);
+    //    }
+    //    //TODO upload the files to the server
+    //    Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
+    //}
 
     private async Task OnDataAnnotationsValidated()
     {

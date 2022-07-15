@@ -44,7 +44,7 @@ namespace LectorUniversal.Server.Controllers
             var model = new VisualiseBookDTO();
             model.Book = Book;
             model.Genders = Book.Genders.Select(x => x.Gender).ToList();
-            model.Chapters = Book.Chapters.ToList();
+            model.Chapters = Book.Chapters.OrderBy(x => x.Title).ToList();
 
             return model;
         }
