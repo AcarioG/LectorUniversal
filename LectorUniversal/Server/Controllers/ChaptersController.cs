@@ -65,25 +65,25 @@ namespace LectorUniversal.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] Chapter chapter)
         {
-            var book = await _db.Books.Where(x => x.Id == chapter.BooksId).FirstOrDefaultAsync();
-            string folder = $"{book.Name.Replace(" ", "-")}/{chapter.Title.Replace(" ", "-")}";
-            var bookType = Enum.GetName(book.TypeofBook);
-            //Shared.Pages pages = new Shared.Pages();
-            List<string> imgUrl = new List<string>();
-            foreach (var item in chapter.ChapterPages)
-            {
-                var ChapterPage = Convert.FromBase64String(item.ImageUrl);
-                 imgUrl.Add(await _fileUpload.SaveFile(ChapterPage, "jpg",bookType, folder));
-            }
-            chapter.ChapterPages.RemoveRange(0,chapter.ChapterPages.Count());
-            foreach (var item in imgUrl)
-            {
-                chapter.ChapterPages.Add(new Shared.Pages { ImageUrl = item});
-            }
+            //var book = await _db.Books.Where(x => x.Id == chapter.BooksId).FirstOrDefaultAsync();
+            //string folder = $"{book.Name.Replace(" ", "-")}/{chapter.Title.Replace(" ", "-")}";
+            //var bookType = Enum.GetName(book.TypeofBook);
+            ////Shared.Pages pages = new Shared.Pages();
+            //List<string> imgUrl = new List<string>();
+            //foreach (var item in chapter.ChapterPages)
+            //{
+            //    var ChapterPage = Convert.FromBase64String(item.ImageUrl);
+            //     imgUrl.Add(await _fileUpload.SaveFile(ChapterPage, "jpg",bookType, folder));
+            //}
+            //chapter.ChapterPages.RemoveRange(0,chapter.ChapterPages.Count());
+            //foreach (var item in imgUrl)
+            //{
+            //    chapter.ChapterPages.Add(new Shared.Pages { ImageUrl = item});
+            //}
 
             await _db.AddAsync(chapter);
             await _db.SaveChangesAsync();
-            return Ok(chapter);
+            return chapter.Id;
         }
 
     }

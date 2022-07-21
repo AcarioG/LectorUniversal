@@ -35,7 +35,7 @@ else
 
     private async Task CreateBook()
     {
-        var httpResponse = await repository.Post<Book>("api/books", Book);
+        var httpResponse = await repository.Post<Book,int>("api/books", Book);
 
         if (httpResponse.Error)
         {

@@ -17,8 +17,10 @@ else
 @code {
     private bool MostrarForm { get; set; } = false;
     private Chapter Chapter = new Chapter();
+    private Pages Pages = new Pages();
     private List<Book> BooksList = new List<Book>();
     [Parameter] public int book { get; set; }
+    private List<string> images { get; set; } = new List<string>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -31,17 +33,50 @@ else
 
     private async Task CreateChapter()
     {
-        var httpResponse = await repository.Post<Chapter>("api/chapters", Chapter);
-
-        if (httpResponse.Error)
+        if (Chapter.ChapterPages.Count() >= 10)
         {
-            await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+            foreach (var item in Chapter.ChapterPages)
+            {
+                images.Add(item.ImageUrl);
+            }
+            Chapter.ChapterPages.Clear();
+            var httpsResponse = await repository.Post<Chapter,int>("api/chapters", Chapter);
+
+            if (httpsResponse.Error)
+            {
+                await showMessages.ShowErrorMessage(await httpsResponse.GetBody());
+            }
+            else
+            {
+                var ChapterId = httpsResponse.Response;
+
+                foreach (var item in images)
+                {
+
+                    Pages.ChapterId = ChapterId;
+                    Pages.ImageUrl = item;
+                    _ = await repository.Post<Pages>("api/pages", Pages);
+                }
+                
+            }
+
         }
         else
         {
-            //var bookId = httpResponse.Response;
-            navigationManager.NavigateTo("books/");
-            await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+            //var httpResponse = await repository.Post<Chapter>("api/chapters", Chapter);
+            //if (httpResponse.Error)
+            //{
+            //    await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+            //}
+            //else
+            //{
+            //    //var responseHttp = await repository.Post<Pages>("api/pages", )
+            //    //var bookId = httpResponse.Response;
+            //    navigationManager.NavigateTo("books/");
+            //    await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+            //}
         }
+
+        
     }
 }

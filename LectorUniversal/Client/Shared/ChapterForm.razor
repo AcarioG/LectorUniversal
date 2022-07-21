@@ -1,8 +1,9 @@
 ﻿@inject IShowMessages showMessage
+@inject IRepository repository
 
 <EditForm Model="Chapter" OnSubmit="OnDataAnnotationsValidated">
-    <div class="col-md-5">
-        <div class="form-group col-md-5">
+    <div class="col-lg-10">
+        <div class="form-group">
             @*<MudSelect T="BooksList" @bind-Value=@comicSelected Label="Comics">
                     <MudSelectItem Value="@Books.Key">@Books.Name</MudSelectItem>
             </MudSelect>*@
@@ -24,7 +25,7 @@
             </div>
         </div>
         <div class="form-group col-md-5">
-            <MultipleImages Label="Pages" ImageSelected="ImageSelected"/>
+            <MultipleImages ImageSelected="ImageSelected"/>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
         
@@ -50,9 +51,9 @@
     [Parameter] public int IdBook { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
-    [Parameter]public Chapter Chapter {  get;  set; }
+    [Parameter] public Chapter Chapter {  get;  set; }
+    public Pages Pages { get; set; } = new Pages();
     private string Images;
-    IList<IBrowserFile> files = new List<IBrowserFile>();
     private string comicSelected = "0";
 
     private List<MultipleSelectorModel> Books { get; set; } = new List<MultipleSelectorModel>();
@@ -63,13 +64,20 @@
         //public void Closed(MudChip chip) => Pages.Remove();
     }
 
-    private void ImageSelected(List<string> ImageBase64)
+    private async Task ImageSelected(List<string> ImageBase64)
     {
+
+        //foreach (var image in ImageBase64)
+        //{
+        //    Pages.ImageUrl = image;
+
+        //    //var result = await repository.Post<Pages>("api/pages", Pages);
+        //}
+
         foreach (var item in ImageBase64)
         {
             Images = item;
         }
-
         Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
 
