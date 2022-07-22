@@ -2,7 +2,6 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-@*@attribute [Authorize(Roles ="admin")]*@
 
 
 <h3>Create</h3>
@@ -44,10 +43,9 @@ else
         }
         else
         {
-            //var bookId = httpResponse.Response;
-            //navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-")}");
-            navigationManager.NavigateTo($"books/");
-            await showMessages.ShowSuccessMessage("Comic creado con exito");
+            var bookId = httpResponse.Response;
+            navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-").Replace(":","").Replace("#","")}");
+            await showMessages.ShowSuccessMessage($"Comic {Book?.Name} creado con exito");
         }
     }
 }

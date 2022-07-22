@@ -89,7 +89,7 @@ namespace LectorUniversal.Server.Controllers
 
             _db.Add(book);
             await _db.SaveChangesAsync();
-            return Ok(book);
+            return book.Id;
         }
 
         [HttpPut]

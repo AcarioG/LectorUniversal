@@ -4,11 +4,11 @@
 @inject NavigationManager navigationManager
 
 
-<h3>ChapterDetail</h3>
+<h3>@model.Book.Name <MudDivider Vertical="true" /> @model.Chapters.Select(x => x.Title)</h3>
 
 @if (@MostrarForm != false)
 {
-    <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px;" >
+    <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px; margin-bottom:100px;" >
         @foreach (var item in ChapterPages)
         {
             <MudImage Src="@item.ImageUrl" Height="1000" Width="700" />

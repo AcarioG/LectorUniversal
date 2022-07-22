@@ -24,7 +24,7 @@
         StateHasChanged();
     }
 
-    private async Task LoadBooks(int page = 2)
+    private async Task LoadBooks(int page = 1)
     {
         var responseHttp = await repository.Get<List<Book>>($"api/books?pagination={page}", includeToken:false);
         if (!responseHttp.Error)

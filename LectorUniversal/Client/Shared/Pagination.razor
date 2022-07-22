@@ -4,7 +4,7 @@
      {
        <li onclick="@(() => PageSelectedIntern(link))"
             style="cursor: pointer;"
-            class="page-item @(link.Active ? null : "disabled") @(link.Active ? "active" : null)">
+            class="page-item @(link.Enable ? null : "disabled") @(link.Active ? "active" : null)">
             <span class="page-link" href="#">@link.Text</span>
        </li>
      }
@@ -71,7 +71,6 @@
             Enable = enable;
             Text = text;
         }
-
 
         public string Text { get; set; }
         public int Page { get; set; }

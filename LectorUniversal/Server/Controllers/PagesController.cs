@@ -18,20 +18,6 @@ namespace LectorUniversal.Server.Controllers
             _fileUpload = fileUpload;
         }
 
-        // GET: api/<PagesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<PagesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<PagesController>
         [HttpPost]
         public async Task<ActionResult> Post(Shared.Pages Images)
@@ -39,7 +25,7 @@ namespace LectorUniversal.Server.Controllers
             var Chapter = _db.Chapters.Where(x => x.Id == Images.ChapterId).FirstOrDefault();
             var Book = _db.Books.Where(x => x.Id == Chapter.BooksId).FirstOrDefault();
 
-            string folder = $"{Book.Name.Replace(" ", "-")}/{Chapter.Title.Replace(" ", "-")}";
+            string folder = $"{Book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}/{Chapter.Title.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
             var bookType = Enum.GetName(Book.TypeofBook);
 
             var ChapterPage = Convert.FromBase64String(Images.ImageUrl);
