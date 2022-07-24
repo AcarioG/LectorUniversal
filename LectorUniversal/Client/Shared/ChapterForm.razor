@@ -61,35 +61,16 @@
     protected override void OnInitialized()
     {
         Books = BooksList.Select(x => new MultipleSelectorModel(x.Id.ToString(),x.Name)).ToList();
-        //public void Closed(MudChip chip) => Pages.Remove();
     }
 
     private async Task ImageSelected(List<string> ImageBase64)
     {
-
-        //foreach (var image in ImageBase64)
-        //{
-        //    Pages.ImageUrl = image;
-
-        //    //var result = await repository.Post<Pages>("api/pages", Pages);
-        //}
-
         foreach (var item in ImageBase64)
         {
             Images = item;
         }
         Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
     }
-
-    //private void UploadFiles(InputFileChangeEventArgs e)
-    //{
-    //    foreach (var file in e.GetMultipleFiles())
-    //    {
-    //        files.Add(file);
-    //    }
-    //    //TODO upload the files to the server
-    //    Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
-    //}
 
     private async Task OnDataAnnotationsValidated()
     {
@@ -99,8 +80,6 @@
             return;
         }
         Chapter.BooksId = int.Parse(comicSelected);
-
-        // Chapter.BookId = Books.Select(x => new Chapter { BookId = int.Parse(x.Key) }).FirstOrDefault();
 
         await OnValidSubmit.InvokeAsync(null);
     }

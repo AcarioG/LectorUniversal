@@ -8,12 +8,10 @@
 @if (@MostrarForm != false)
 {
     <BooksForm OnValidSubmit="CreateBook" Book="Book" GendersNotSelected="GendersNotSelected"/>
-    
 }
 else
 {
     <text>Cargando..</text>
-
 }
 
 
@@ -29,7 +27,6 @@ else
 
         StateHasChanged();
         MostrarForm = true;
-
     }
 
     private async Task CreateBook()

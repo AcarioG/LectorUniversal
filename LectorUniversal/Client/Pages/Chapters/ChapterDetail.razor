@@ -4,7 +4,9 @@
 @inject NavigationManager navigationManager
 
 
-<h3>@model.Book.Name <MudDivider Vertical="true" /> @model.Chapters.Select(x => x.Title)</h3>
+<div>
+    <h3>@model.Book.Name</h3> | <h3>@model.Chapters.Select(x => x.Title).FirstOrDefault()</h3> 
+</div>
 
 @if (@MostrarForm != false)
 {
@@ -18,9 +20,6 @@
 {
     <text>no hay registros</text>
 }
-
-
-
 
 @code {
     [Parameter] public int Id { get; set; }

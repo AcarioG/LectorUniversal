@@ -81,7 +81,7 @@ namespace LectorUniversal.Server.Controllers
         {
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
-                string folder = $"{book.Name.Replace(" ", "-")}";
+                string folder = $"{book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
                 var coverPoster = Convert.FromBase64String(book.Cover);
                 var bookType = Enum.GetName(book.TypeofBook);
                 book.Cover = await _fileUpload.SaveFile(coverPoster, "jpg",bookType, folder);

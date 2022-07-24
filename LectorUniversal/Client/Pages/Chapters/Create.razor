@@ -33,50 +33,31 @@ else
 
     private async Task CreateChapter()
     {
-        if (Chapter.ChapterPages.Count() >= 10)
+        foreach (var item in Chapter.ChapterPages)
         {
-            foreach (var item in Chapter.ChapterPages)
-            {
-                images.Add(item.ImageUrl);
-            }
-            Chapter.ChapterPages.Clear();
-            var httpsResponse = await repository.Post<Chapter,int>("api/chapters", Chapter);
+            images.Add(item.ImageUrl);
+        }
+        Chapter.ChapterPages.Clear();
+        var httpsResponse = await repository.Post<Chapter,int>("api/chapters", Chapter);
 
-            if (httpsResponse.Error)
-            {
-                await showMessages.ShowErrorMessage(await httpsResponse.GetBody());
-            }
-            else
-            {
-                var ChapterId = httpsResponse.Response;
-
-                foreach (var item in images)
-                {
-
-                    Pages.ChapterId = ChapterId;
-                    Pages.ImageUrl = item;
-                    _ = await repository.Post<Pages>("api/pages", Pages);
-                }
-                
-            }
-
+        if (httpsResponse.Error)
+        {
+            await showMessages.ShowErrorMessage(await httpsResponse.GetBody());
         }
         else
         {
-            //var httpResponse = await repository.Post<Chapter>("api/chapters", Chapter);
-            //if (httpResponse.Error)
-            //{
-            //    await showMessages.ShowErrorMessage(await httpResponse.GetBody());
-            //}
-            //else
-            //{
-            //    //var responseHttp = await repository.Post<Pages>("api/pages", )
-            //    //var bookId = httpResponse.Response;
-            //    navigationManager.NavigateTo("books/");
-            //    await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
-            //}
-        }
+            var ChapterId = httpsResponse.Response;
 
-        
+            foreach (var item in images)
+            {
+
+                Pages.ChapterId = ChapterId;
+                Pages.ImageUrl = item;
+                _ = await repository.Post<Pages>("api/pages", Pages);
+            }
+                
+            navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
+            await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+        }
     }
 }
