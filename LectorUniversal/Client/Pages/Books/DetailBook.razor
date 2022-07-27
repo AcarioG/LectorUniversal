@@ -16,6 +16,9 @@ else
         <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
         @*<MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
         <text>Hi</text>*@
+        <MudRating SelectedValue="selectedVal" SelectedValueChanged="OnVote" >
+        </MudRating>
+
     </MudPaper>
     <div class="col-md-6">
         <br/>
@@ -36,6 +39,22 @@ else
     [Parameter] public int Id { get; set; }
     [Parameter] public string BookName { get; set; }
     private VisualiseBookDTO model;
+    private int selectedVal = 0;
+
+    private async Task OnVote(int voteSelected)
+    {
+        model.UserVote = voteSelected;
+        var voteBook = new Votes() { Vote = voteSelected, BookId = Id };
+        var responseHttp = await repository.Post("api/votes", voteBook);
+        if (responseHttp.Error)
+        {
+            showMessages.ShowErrorMessage("No se ha procesado su voto");
+        }
+        else
+        {
+            showMessages.ShowSuccessMessage("Su voto ha sido recibido!");
+        }
+    }
 
     protected async override Task OnInitializedAsync()
     {

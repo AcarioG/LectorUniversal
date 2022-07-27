@@ -1,0 +1,40 @@
+﻿@*@inject IShowMessages showMessages
+
+@for (int i = 1; i < 5; i++)
+{
+    var stars = i;
+    <span @onclick="(() => onclickHandle(stars))"
+        @onmouseover="(() => onmouseoverHandle(stars))"
+        style="cursor:pointer"
+        class="">
+
+    </span>
+}
+*@
+@*<MudRating @bind-SelectedValue="" HoveredValueChanged="HandleHoveredValueChanged" />*@
+
+@code {
+    //[Parameter] public int ScoreSelected { get; set; }
+    //[Parameter] public EventCallback<int> OnVote { get; set; }
+    //private bool voted = false;
+    ////private int? puntaje;
+
+
+    ////private void HandleHoveredValueChanged(int? val) => puntaje = val;
+
+    //private async Task onclickHandle(int stars)
+    //{
+    //    ScoreSelected = stars;
+    //    voted = true;
+    //    await OnVote.InvokeAsync(ScoreSelected);
+
+    //}
+
+    //private void onmouseoverHandle(int stars)
+    //{
+    //    if (!voted)
+    //    {
+    //        ScoreSelected = stars;
+    //    }
+    //}
+}

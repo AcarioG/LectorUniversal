@@ -8,5 +8,7 @@ namespace LectorUniversal.Shared.DTOs
         public List<Chapter>? Chapters { get; set; }
         public List<Gender>? Genders { get; set; }
         public List<Pages>? Pages { get; set; }
+        public int UserVote { get; set; }
+        public double AverageVote { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
+using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,13 +19,15 @@ namespace LectorUniversal.Server.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IFileUpload _fileUpload;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BooksController(ApplicationDbContext db, IFileUpload fileUpload,
+        public BooksController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IFileUpload fileUpload,
             IMapper mapper)
         {
             _db = db;
             _fileUpload = fileUpload;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -41,10 +45,36 @@ namespace LectorUniversal.Server.Controllers
                 return NotFound();
             }
 
+            var averageVote = 0.0;
+            var userVote = 0;
+
+            if(await _db.BookVotes.AnyAsync(x => x.BookId == id))
+            {
+
+                averageVote = await _db.BookVotes.Where(x => x.BookId == id).AverageAsync(x => x.Vote);
+                //if (HttpContext.User.Identity.IsAuthenticated)
+                //{
+                    var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                    var userId = user.Id;
+
+                    var userDBVote = await _db.BookVotes.FirstOrDefaultAsync(x => x.BookId == id && x.UserId == userId);
+
+                    if (userDBVote != null)
+                    {
+                        userVote = userDBVote.Vote;
+                    }
+                //}
+            }
+
+            
+
+
             var model = new VisualiseBookDTO();
             model.Book = Book;
             model.Genders = Book.Genders.Select(x => x.Gender).ToList();
             model.Chapters = Book.Chapters.OrderBy(x => x.Title).ToList();
+            model.AverageVote = averageVote;
+            model.UserVote = userVote;
 
             return model;
         }
