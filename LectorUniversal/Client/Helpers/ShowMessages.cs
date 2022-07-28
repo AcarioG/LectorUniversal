@@ -25,6 +25,16 @@ namespace LectorUniversal.Client.Helpers
             await ShowMessage(Severity.Success, message);
         }
 
+        public async Task ShowWarningMessage(string message)
+        {
+            await ShowMessage(Severity.Warning, message);
+        }
+
+        public async Task ShowInfoMessage(string message)
+        {
+            await ShowMessage(Severity.Info, message);
+        }
+
         private async Task ShowMessage( Severity severityMessage,  string message)
         {
             //await _js.InvokeVoidAsync(title, message, typeMessage);

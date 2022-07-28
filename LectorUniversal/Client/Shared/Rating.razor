@@ -1,6 +1,6 @@
-﻿@*@inject IShowMessages showMessages
+﻿@inject IShowMessages showMessages
 
-@for (int i = 1; i < 5; i++)
+@*@for (int i = 1; i < 5; i++)
 {
     var stars = i;
     <span @onclick="(() => onclickHandle(stars))"
@@ -9,32 +9,25 @@
         class="">
 
     </span>
-}
-*@
-@*<MudRating @bind-SelectedValue="" HoveredValueChanged="HandleHoveredValueChanged" />*@
+}*@
+<MudRating SelectedValue="ScoreSelected" SelectedValueChanged="onclickHandle" />
 
 @code {
-    //[Parameter] public int ScoreSelected { get; set; }
-    //[Parameter] public EventCallback<int> OnVote { get; set; }
-    //private bool voted = false;
-    ////private int? puntaje;
+    [Parameter] public int ScoreSelected { get; set; }
+    [Parameter] public EventCallback<int> OnVote { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> authenticationState { get; set; }
 
-
-    ////private void HandleHoveredValueChanged(int? val) => puntaje = val;
-
-    //private async Task onclickHandle(int stars)
-    //{
-    //    ScoreSelected = stars;
-    //    voted = true;
-    //    await OnVote.InvokeAsync(ScoreSelected);
-
-    //}
-
-    //private void onmouseoverHandle(int stars)
-    //{
-    //    if (!voted)
-    //    {
-    //        ScoreSelected = stars;
-    //    }
-    //}
+    private async Task onclickHandle(int stars)
+    {
+        var authState = await authenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            ScoreSelected = stars;
+            await OnVote.InvokeAsync(ScoreSelected);
+        }
+        else
+        {
+            showMessages.ShowWarningMessage("Para usar esta funcionalidad, debe logearse.");
+        }
+    }
 }

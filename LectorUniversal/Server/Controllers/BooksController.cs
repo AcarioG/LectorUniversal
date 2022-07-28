@@ -14,6 +14,7 @@ namespace LectorUniversal.Server.Controllers
     //[Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -45,6 +46,8 @@ namespace LectorUniversal.Server.Controllers
                 return NotFound();
             }
 
+            
+
             var averageVote = 0.0;
             var userVote = 0;
 
@@ -52,8 +55,8 @@ namespace LectorUniversal.Server.Controllers
             {
 
                 averageVote = await _db.BookVotes.Where(x => x.BookId == id).AverageAsync(x => x.Vote);
-                //if (HttpContext.User.Identity.IsAuthenticated)
-                //{
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
                     var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                     var userId = user.Id;
 
@@ -63,11 +66,8 @@ namespace LectorUniversal.Server.Controllers
                     {
                         userVote = userDBVote.Vote;
                     }
-                //}
+                }
             }
-
-            
-
 
             var model = new VisualiseBookDTO();
             model.Book = Book;
@@ -133,7 +133,7 @@ namespace LectorUniversal.Server.Controllers
             {
                 var coverImage = Convert.FromBase64String(book.Cover);
                 var actualfolder = $"{bookDB.Name.Replace(" ", "-")}";
-                var newfolder = $"{book.Name.Replace(" ", "-")}";
+                var newfolder = $"{book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
                 var bookType = Enum.GetName(bookDB.TypeofBook);
                 bool complete = false;
                 bookDB.Cover = await _fileUpload.EditFile(coverImage, "jpg", actualfolder, newfolder, bookDB.Cover, bookType, complete);

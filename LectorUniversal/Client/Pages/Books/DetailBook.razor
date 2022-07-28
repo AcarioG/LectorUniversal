@@ -3,6 +3,7 @@
 @inject IRepository repository
 @inject NavigationManager navigateManager
 @inject IShowMessages showMessages
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
 @if (model == null)
@@ -14,10 +15,9 @@ else
     
     <MudPaper Outlined="true" >
         <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
-        @*<MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
-        <text>Hi</text>*@
-        <MudRating SelectedValue="selectedVal" SelectedValueChanged="OnVote" >
-        </MudRating>
+        <MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
+        <text>Hi</text>
+        <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
 
     </MudPaper>
     <div class="col-md-6">
@@ -48,7 +48,7 @@ else
         var responseHttp = await repository.Post("api/votes", voteBook);
         if (responseHttp.Error)
         {
-            showMessages.ShowErrorMessage("No se ha procesado su voto");
+            showMessages.ShowWarningMessage("No se ha procesado su voto");
         }
         else
         {
@@ -58,25 +58,51 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}", includeToken:false);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        if (responseHttp.Error)
+        if (user.Identity.IsAuthenticated)
         {
-            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}");
+
+            if (responseHttp.Error)
             {
-                navigateManager.NavigateTo("");
+                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    navigateManager.NavigateTo("");
+                }
+                else
+                {
+                    var ErrorMensaje = await responseHttp.GetBody();
+                    await showMessages.ShowErrorMessage(ErrorMensaje);
+                }
             }
             else
             {
-                var ErrorMensaje = await responseHttp.GetBody();
-                await showMessages.ShowErrorMessage(ErrorMensaje);
+                model = responseHttp.Response;
             }
         }
         else
         {
-            model = responseHttp.Response;
-        }
+            var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}", includeToken: false);
 
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    navigateManager.NavigateTo("");
+                }
+                else
+                {
+                    var ErrorMensaje = await responseHttp.GetBody();
+                    await showMessages.ShowErrorMessage(ErrorMensaje);
+                }
+            }
+            else
+            {
+                model = responseHttp.Response;
+            }
+        }
     }
 
 }

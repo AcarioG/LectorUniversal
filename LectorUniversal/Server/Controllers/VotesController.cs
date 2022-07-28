@@ -1,7 +1,6 @@
 ﻿using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
