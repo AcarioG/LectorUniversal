@@ -40,21 +40,17 @@ namespace LectorUniversal.Server.Controllers
                 .Include(x => x.Chapters.Where(c => c.BooksId == id))
                 .FirstOrDefaultAsync();
 
-            //var Chapter = await _db.Chapters.FirstOrDefaultAsync(;
-            if (Book == null)
-            {
-                return NotFound();
-            }
-
-            
+            if (Book == null) { return NotFound(); } 
 
             var averageVote = 0.0;
             var userVote = 0;
 
             if(await _db.BookVotes.AnyAsync(x => x.BookId == id))
             {
-
+                //Get the average votes from a comic
                 averageVote = await _db.BookVotes.Where(x => x.BookId == id).AverageAsync(x => x.Vote);
+
+                //Get the vote from user if the user is Authenticated
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
                     var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
@@ -109,6 +105,7 @@ namespace LectorUniversal.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] Book book)
         {
+            //Create directory path to save the images
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
                 string folder = $"{book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
@@ -129,6 +126,7 @@ namespace LectorUniversal.Server.Controllers
 
             if (bookDB == null) { return NotFound(); }
 
+            //Edit the local path to save the images
             if (!string.IsNullOrWhiteSpace(book.Cover))
             {
                 var coverImage = Convert.FromBase64String(book.Cover);
@@ -157,6 +155,7 @@ namespace LectorUniversal.Server.Controllers
             var exits = await _db.Books.AsNoTracking().AnyAsync(x => x.Id == id);
             if (!exits) { return NotFound(); }
 
+            //Delete the local path completely
             var book = await _db.Books.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
             var folder = book.Name.Replace(" ", "-");
             var bookType = Enum.GetName(book.TypeofBook);

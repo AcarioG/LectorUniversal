@@ -61,6 +61,7 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
+        //Include token in request to get Votes
         if (user.Identity.IsAuthenticated)
         {
             var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}");
@@ -84,6 +85,8 @@ else
         }
         else
         {
+            //Exclude token for users who's not authenticated
+
             var responseHttp = await repository.Get<VisualiseBookDTO>($"api/books/{Id}", includeToken: false);
 
             if (responseHttp.Error)

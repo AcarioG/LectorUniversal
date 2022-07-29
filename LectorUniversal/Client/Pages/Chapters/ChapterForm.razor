@@ -28,9 +28,6 @@
             <MultipleImages ImageSelected="ImageSelected"/>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
-        
-        
-        
         @*<MudPaper>        
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Primary">
                 Upload
@@ -69,7 +66,8 @@
         {
             Images = item;
         }
-        Chapter.ChapterPages.Add(new Pages { ImageUrl = Images });
+        Chapter.ChapterPages.Add(new Pages() { ImageUrl = Images });
+
     }
 
     private async Task OnDataAnnotationsValidated()

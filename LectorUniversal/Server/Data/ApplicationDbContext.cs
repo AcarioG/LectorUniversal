@@ -21,7 +21,6 @@ namespace LectorUniversal.Server.Data
             builder.Entity<Book>().HasMany(c => c.Chapters).WithOne(b => b.Books).HasForeignKey(b => b.BooksId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Chapter>().HasMany(p => p.ChapterPages).WithOne(c => c.Chapter).HasForeignKey(c => c.ChapterId).OnDelete(DeleteBehavior.Cascade);
 
-
             //var roleAdmin =
             //    new IdentityRole()
             //    {

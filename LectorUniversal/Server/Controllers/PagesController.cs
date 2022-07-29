@@ -25,17 +25,17 @@ namespace LectorUniversal.Server.Controllers
             var Chapter = _db.Chapters.Where(x => x.Id == Images.ChapterId).FirstOrDefault();
             var Book = _db.Books.Where(x => x.Id == Chapter.BooksId).FirstOrDefault();
 
-            string folder = $"{Book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}/{Chapter.Title.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
-            var bookType = Enum.GetName(Book.TypeofBook);
+            if(!string.IsNullOrWhiteSpace(Images.ImageUrl))
+            {
+                string folder = $"{Book.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}/{Chapter.Title.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
+                var bookType = Enum.GetName(Book.TypeofBook);
+                var ChapterPage = Convert.FromBase64String(Images.ImageUrl);
+                var ImageDB = await _fileUpload.SaveFile(ChapterPage, "jpg", bookType, folder);
+                Images.ImageUrl = ImageDB;
 
-            var ChapterPage = Convert.FromBase64String(Images.ImageUrl);
-            var Image = await _fileUpload.SaveFile(ChapterPage, "jpg", bookType, folder);
-
-            Images.ImageUrl = Image;
-
-            await _db.Pages.AddAsync(Images);
-            await _db.SaveChangesAsync();
-
+                await _db.Pages.AddAsync(Images);
+                await _db.SaveChangesAsync();
+            }
             return Ok(Images);
         }
 

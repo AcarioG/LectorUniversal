@@ -11,7 +11,6 @@
 else
 {
     <text>Cargando..</text>
-
 }
 
 @code {
@@ -20,7 +19,7 @@ else
     private Pages Pages = new Pages();
     private List<Book> BooksList = new List<Book>();
     [Parameter] public int book { get; set; }
-    private List<string> images { get; set; } = new List<string>();
+    private List<string> ImagesUrl = new List<string>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -35,9 +34,10 @@ else
     {
         foreach (var item in Chapter.ChapterPages)
         {
-            images.Add(item.ImageUrl);
+            ImagesUrl.Add(item.ImageUrl);
         }
         Chapter.ChapterPages.Clear();
+
         var httpsResponse = await repository.Post<Chapter,int>("api/chapters", Chapter);
 
         if (httpsResponse.Error)
@@ -48,16 +48,16 @@ else
         {
             var ChapterId = httpsResponse.Response;
 
-            foreach (var item in images)
-            {
+            Pages.ChapterId = ChapterId;
 
-                Pages.ChapterId = ChapterId;
+            foreach (var item in ImagesUrl)
+            {
                 Pages.ImageUrl = item;
-                _ = await repository.Post<Pages>("api/pages", Pages);
+                await repository.Post<Pages>("api/pages", Pages);
             }
-                
+
             navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
             await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
         }
-    }
+    }    
 }
