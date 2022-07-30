@@ -1,7 +1,8 @@
 ﻿@page "/users"
 @inject IRepository repository
 @inject IShowMessages showMessages
-@*@attribute [Authorize(Roles = "admin")]*@
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles = "admin")]
 
 <h3>Users</h3>
 
@@ -28,16 +29,22 @@
 
     private async Task LoadUsers()
     {
-        var httpResponse = await repository.Get<List<UserDTO>>($"api/users");
+         var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Get<List<UserDTO>>($"api/users");
 
-        if (httpResponse.Error)
-        {
-            await showMessages.ShowErrorMessage(await httpResponse.GetBody());
-        }
-        else
-        {
-            Users = httpResponse.Response;
+                if (httpResponse.Error)
+                {
+                    await showMessages.ShowErrorMessage(await httpResponse.GetBody());
+                }
+                else
+                {
+                    Users = httpResponse.Response;
+                }
+            }
         }
     }
-
 }

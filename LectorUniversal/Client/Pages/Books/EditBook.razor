@@ -2,7 +2,8 @@
 @inject IRepository repository
 @inject IShowMessages showMessage
 @inject NavigationManager navigationManager
-@*@attribute [Authorize(Roles ="admin")]*@
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
 
 
 @if (Book == null)
@@ -48,14 +49,21 @@ else
 
     private async Task Edit()
     {
-        var httpResponse = await repository.Put("api/books", Book);
-        if (httpResponse.Error)
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            await showMessage.ShowErrorMessage(await httpResponse.GetBody());
-        }
-        else
-        {
-            navigationManager.NavigateTo($"books/{BookId}");
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Put("api/books", Book);
+                if (httpResponse.Error)
+                {
+                    await showMessage.ShowErrorMessage(await httpResponse.GetBody());
+                }
+                else
+                {
+                    navigationManager.NavigateTo($"books/{BookId}");
+                }
+            }
         }
     }
 }

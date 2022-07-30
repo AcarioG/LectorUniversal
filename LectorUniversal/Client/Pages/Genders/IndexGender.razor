@@ -2,52 +2,58 @@
 @inject IRepository repository
 @inject IShowMessages showMessages
 @inject AuthenticationStateProvider stateProvider
-@*@attribute [Authorize(Roles = "admin")]*@
+@attribute [Authorize(Roles = "admin")]
 
+
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" Size="Size.Medium" Style="margin-left:160px; margin-top:40px;" />
+        <GenericList Lists="Genders">
+            <CompleteRecordsFound>
+                <div class="col-md-10" style="margin-left:160px; margin-top:40px;">
+                    <MudSimpleTable Dense="true" Hover="true" Bordered="true" Style="">
+                        <thead>
+                            <tr  style="background-color:lightgray">
+                                <th><b>Generos</b></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var gender in Genders)
+                            {
+                                <tr>
+                                    <td>@gender.Name</td>
+                                    <td>
+                                       <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" 
+                                            Href="@($"/genders/edit/{gender.Id}")" Color="Color.Warning" Size="Size.Small" ></MudIconButton>
+                                       <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
+                                            @onclick="(() => DeleteGender(gender))" Size="Size.Small" ></MudIconButton>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </MudSimpleTable>
+                </div>
+            </CompleteRecordsFound>
+        </GenericList>
+    </Authorized>
+</AuthorizeView>
 <h3>Indice de Generos</h3>
 
-<MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" Size="Size.Medium" Style="margin-left:160px; margin-top:40px;" />
 
-<div>
-    <GenericList Lists="Genders">
-        <CompleteRecordsFound>
-            <div class="col-md-10" style="margin-left:160px; margin-top:40px;">
-                <MudSimpleTable Dense="true" Hover="true" Bordered="true" Style="">
-                    <thead>
-                        <tr  style="background-color:lightgray">
-                            <th><b>Generos</b></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var gender in Genders)
-                        {
-                            <tr>
-                                <td>@gender.Name</td>
-                                <td>
-                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" 
-                                        Href="@($"/genders/edit/{gender.Id}")" Color="Color.Warning" Size="Size.Small" ></MudIconButton>
-                                   <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
-                                        @onclick="(() => DeleteGender(gender))" Size="Size.Small" ></MudIconButton>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
-            </div>
-        </CompleteRecordsFound>
-    </GenericList>
-</div>
 
 @code {
     public List<Gender> Genders {get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var user = (await stateProvider.GetAuthenticationStateAsync()).User.Identity;
-        if (user != null && user.IsAuthenticated )
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-           await LoadGenders();      
+            if (user.IsInRole("admin"))
+            {
+                await LoadGenders();
+            }
         }
     }
 
@@ -59,16 +65,22 @@
 
     private async Task DeleteGender(Gender gender)
     {
-        var responseHttp = await repository.Delete($"api/genders/{gender.Id}");
-        if (responseHttp.Error)
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            await showMessages.ShowErrorMessage(await responseHttp.GetBody());
-        }
-        else
-        {
-            await LoadGenders();
-            StateHasChanged();
+            if (user.IsInRole("admin"))
+            {
+                var responseHttp = await repository.Delete($"api/genders/{gender.Id}");
+                if (responseHttp.Error)
+                {
+                    await showMessages.ShowErrorMessage(await responseHttp.GetBody());
+                }
+                else
+                {
+                    await LoadGenders();
+                    StateHasChanged();
+                }
+            }
         }
     }
-
 }

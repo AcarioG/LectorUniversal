@@ -2,7 +2,8 @@
 @inject IRepository repository
 @inject IShowMessages showMessage
 @inject NavigationManager navigationManager
-@*@attribute [Authorize(Roles ="admin")]*@
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
 
 @if (Gender == null)
 {
@@ -40,14 +41,22 @@ else
 
     private async void Edit()
     {
-        var httpResponse = await repository.Put("api/genders", Gender);
-        if (httpResponse.Error)
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            await showMessage.ShowErrorMessage(await httpResponse.GetBody());
-        }
-        else
-        {
-            navigationManager.NavigateTo("genders");
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Put("api/genders", Gender);
+                if (httpResponse.Error)
+                {
+                    await showMessage.ShowErrorMessage(await httpResponse.GetBody());
+                }
+                else
+                {
+                    navigationManager.NavigateTo("genders");
+                }
+            }
         }
     }
 }

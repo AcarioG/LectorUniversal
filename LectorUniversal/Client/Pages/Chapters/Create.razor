@@ -2,7 +2,8 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-@*@attribute [Authorize(Roles ="admin")]*@
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
 
 @if (@MostrarForm != false)
 {
@@ -32,32 +33,40 @@ else
 
     private async Task CreateChapter()
     {
-        foreach (var item in Chapter.ChapterPages)
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            ImagesUrl.Add(item.ImageUrl);
-        }
-        Chapter.ChapterPages.Clear();
-
-        var httpsResponse = await repository.Post<Chapter,int>("api/chapters", Chapter);
-
-        if (httpsResponse.Error)
-        {
-            await showMessages.ShowErrorMessage(await httpsResponse.GetBody());
-        }
-        else
-        {
-            var ChapterId = httpsResponse.Response;
-
-            Pages.ChapterId = ChapterId;
-
-            foreach (var item in ImagesUrl)
+            if (user.IsInRole("admin"))
             {
-                Pages.ImageUrl = item;
-                await repository.Post<Pages>("api/pages", Pages);
-            }
+                foreach (var item in Chapter.ChapterPages)
+                {
+                    ImagesUrl.Add(item.ImageUrl);
+                }
+                Chapter.ChapterPages.Clear();
 
-            navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
-            await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+                var httpsResponse = await repository.Post<Chapter, int>("api/chapters", Chapter);
+
+                if (httpsResponse.Error)
+                {
+                    await showMessages.ShowErrorMessage(await httpsResponse.GetBody());
+                }
+                else
+                {
+                    var ChapterId = httpsResponse.Response;
+
+                    Pages.ChapterId = ChapterId;
+
+                    foreach (var item in ImagesUrl)
+                    {
+                        Pages.ImageUrl = item;
+                        await repository.Post<Pages>("api/pages", Pages);
+                    }
+
+                    navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
+                    await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+                }
+            }
         }
     }    
 }

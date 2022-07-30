@@ -1,7 +1,8 @@
 ﻿@page "/genders/create"
 @inject IRepository repository
 @inject NavigationManager navigationManager
-@*@attribute [Authorize(Roles ="admin")]*@
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
 
 
 <GenderForm OnValidSubmit="CreateGender" Gender="Gender" />
@@ -12,17 +13,24 @@
 
     private async Task CreateGender()
     {
-        var httpResponse = await repository.Post("api/genders", Gender);
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
 
-        if (httpResponse.Error)
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
-            Console.WriteLine(body);
-        }
-        else
-        {
-            navigationManager.NavigateTo("/genders");
-        }
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Post("api/genders", Gender);
 
+                if (httpResponse.Error)
+                {
+                    var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
+                    Console.WriteLine(body);
+                }
+                else
+                {
+                    navigationManager.NavigateTo("/genders");
+                }
+            }
+        }
     }
 }

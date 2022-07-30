@@ -2,7 +2,8 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
-
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
 
 <h3>Create</h3>
 @if (@MostrarForm != false)
@@ -31,18 +32,26 @@ else
 
     private async Task CreateBook()
     {
-        var httpResponse = await repository.Post<Book,int>("api/books", Book);
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
 
-        if (httpResponse.Error)
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            var body = await httpResponse.GetBody();
-            await showMessages.ShowErrorMessage(body);
-        }
-        else
-        {
-            var bookId = httpResponse.Response;
-            navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-").Replace(":","").Replace("#","")}");
-            await showMessages.ShowSuccessMessage($"Comic {Book?.Name} creado con exito");
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Post<Book, int>("api/books", Book);
+
+                if (httpResponse.Error)
+                {
+                    var body = await httpResponse.GetBody();
+                    await showMessages.ShowErrorMessage(body);
+                }
+                else
+                {
+                    var bookId = httpResponse.Response;
+                    navigationManager.NavigateTo($"books/{bookId}/{Book?.Name?.Replace(" ", "-").Replace(":", "").Replace("#", "")}");
+                    await showMessages.ShowSuccessMessage($"Comic {Book?.Name} creado con exito");
+                }
+            }
         }
     }
 }
