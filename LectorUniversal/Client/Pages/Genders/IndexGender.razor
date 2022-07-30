@@ -7,6 +7,7 @@
 
 <AuthorizeView Roles="admin">
     <Authorized>
+        <h3>Indice de Generos</h3>
         <MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" Size="Size.Medium" Style="margin-left:160px; margin-top:40px;" />
         <GenericList Lists="Genders">
             <CompleteRecordsFound>
@@ -38,9 +39,6 @@
         </GenericList>
     </Authorized>
 </AuthorizeView>
-<h3>Indice de Generos</h3>
-
-
 
 @code {
     public List<Gender> Genders {get; set; }
