@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'lectoruniversal'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_035A85574F4E4DCB84A77B9D28210539 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9186A37F80DA44C894C5C5A8EAEFAB5A }}
           package: .
