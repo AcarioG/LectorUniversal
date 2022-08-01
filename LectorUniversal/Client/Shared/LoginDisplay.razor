@@ -10,8 +10,8 @@
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Register">Registrarse</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="margin-left:5px;" StartIcon="@Icons.Filled.People" OnClick="Login">Login</MudButton>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -20,5 +20,15 @@
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
+    }
+
+    private void Register()
+    {
+        Navigation.NavigateTo("authentication/register");
+    }
+
+    private void Login()
+    {
+        Navigation.NavigateTo("authentication/login");
     }
 }

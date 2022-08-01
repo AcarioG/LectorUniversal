@@ -10,10 +10,10 @@
 
 @if (@MostrarForm != false)
 {
-    <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px; margin-bottom:100px;" >
+    <MudStack Spacing="1" Justify="Justify.Center" Style="margin-left:290px; margin-bottom:100px;"  Class="col-sm-8 col-md-5 col-xl-8 col-lg-4 col-xxl-8 img-fluid" >
         @foreach (var item in ChapterPages)
         {
-            <MudImage Src="@item.ImageUrl" Height="1000" Width="700" />
+            <MudImage Src="@item.ImageUrl" Class="col-sm-8 col-md-9 col-xl-9 col-lg-9 col-xxl-9" />
         }
     </MudStack>
 
