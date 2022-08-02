@@ -12,23 +12,11 @@
 }
 else
 {
-    <MudPaper Outlined="true" >
-        <div class="flex-column flex-grow-1">
-            <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-            <div>
-                <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
-                <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
-            </div>
-            
-        </div>
-         <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
-        <div class="row-cols-4 row-">
-                <text>Hi</text>
-                <text>Hola</text>
-                <text>Hello</text>
-            </div>
-            </div>
-        </div>
+     <MudPaper Outlined="true" >
+        <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
+        <MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
+        <text>Hi</text>
+        <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
         
         
 
