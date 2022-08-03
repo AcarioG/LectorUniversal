@@ -28,24 +28,10 @@
             <MultipleImages ImageSelected="ImageSelected"/>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
-        @*<MudPaper>        
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Primary">
-                Upload
-            </MudButton>
-            <MudChipSet AllClosable="true" OnClose="Closed">
-                @foreach (var value in values)
-                {
-                    <MudChip Text="@value"></MudChip>
-                }
-            </MudChipSet>
-        </MudPaper>*@
-
     </div>
 </EditForm>
 
 @code {
-
-    [Parameter] public int IdBook { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
     [Parameter] public Chapter Chapter {  get;  set; }

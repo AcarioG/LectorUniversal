@@ -17,37 +17,15 @@
     @if (Images != null)
     {
         <MudText Typo="@Typo.h6">@Images.Count() File@(Images.Count() == 1 ? "" : "s"):</MudText>
-        <MudList>
+        @*<MudList>
             @foreach (var item in ImageInfo)
             {
             <MudListItem Icon="@Icons.Filled.AttachFile" @key="@item">
                 @item
             </MudListItem>
             }
-        </MudList>
+        </MudList>*@
     }
-
-    @*<div class="flex-wrap">
-        @if (ImageBase64 != null)
-        {
-            <div>
-                    @foreach (var item in @Images)
-                    {
-                        <div style="margin:10px;">
-                            <img src="data:image/jpg;base64,@item" style="width:150px;" />
-                        </div>
-                    }
-            </div>
-        }
-        @if (ImageBase64 == null)
-        {
-            <div>
-                <div style="margin:10px;">
-                    <img src="@ImageTemp" style="width:150px;" />
-                </div>
-            </div>
-        }
-    </div>*@
 </div>
 
 @code {

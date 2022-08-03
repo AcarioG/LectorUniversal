@@ -63,8 +63,8 @@ else
                         await repository.Post<Pages>("api/pages", Pages);
                     }
 
-                    navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
-                    await showMessages.ShowSuccessMessage("Capitulo creado exitosamente!");
+                    //navigationManager.NavigateTo($"chapters/viewer/{ChapterId}");
+                    await showMessages.ShowSuccessMessage("Capitulo agregado exitosamente!");
                 }
             }
         }
