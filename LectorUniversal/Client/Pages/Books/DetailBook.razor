@@ -12,12 +12,16 @@
 }
 else
 {
-     <MudPaper Outlined="true" >
-        <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
-        <MudDivider Vertical="true" FlexItem="true" Light="true" Style="background-color:black" />
-        <text>Hi</text>
-        <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
-        
+     <MudPaper Outlined="true" Class="d-flex flex-">
+        <MudContainer Fixed=true Class="row-cols-2 ">
+            <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
+            <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+            
+        </MudContainer>
+        <MudContainer Fixed="true" Class="flex-column col-8">
+
+            <text>Hi</text>
+        </MudContainer>
         
 
     </MudPaper>

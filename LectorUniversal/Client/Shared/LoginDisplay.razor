@@ -3,12 +3,13 @@
 
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
+@inject AuthenticationStateProvider Auth
 
 <AuthorizeView>
     <Authorized>
-        <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter" Dense="true" >
+        <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" Dense="true" >
             <ActivatorContent>
-                <MudAvatar Color="Color.Primary">A</MudAvatar>
+                <MudAvatar Color="Color.Primary">@context.User.Identity.Name.Substring(0,1).ToUpper()</MudAvatar>
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem Href="authentication/profile">Perfil</MudMenuItem>
@@ -23,6 +24,20 @@
 </AuthorizeView>
 
 @code{
+
+    private string? FirstLetter { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await Auth.GetAuthenticationStateAsync();
+        var user = authstate.User;
+
+        if (user.Identity != null)
+        {
+            FirstLetter = user.Identity.Name.Substring(0,1);
+        }
+    }
+
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
