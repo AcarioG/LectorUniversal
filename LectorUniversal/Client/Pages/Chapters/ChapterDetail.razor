@@ -27,8 +27,8 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    private VisualiseBookDTO? model;
-    private List<Pages>? ChapterPages;
+    VisualiseBookDTO? model;
+    List<Pages>? ChapterPages;
     private bool MostrarForm { get; set; } = false;
 
     protected async override Task OnInitializedAsync()
@@ -54,4 +54,6 @@
             MostrarForm = true;
         }
     }
+
+
 }
