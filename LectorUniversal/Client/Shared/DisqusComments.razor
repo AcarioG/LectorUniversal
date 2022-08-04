@@ -1,0 +1,18 @@
+﻿@inject IJSRuntime _js
+@inject NavigationManager _navigationManager
+
+<div id="disqus_thread"></div>
+
+@code {
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            var url = _navigationManager.BaseUri;
+            var identifier = _navigationManager.ToBaseRelativePath(_navigationManager.BaseUri);
+
+            await _js.InvokeAsync<IJSObjectReference>("import","./js/discuss.js",url,identifier );
+        }
+    }
+}

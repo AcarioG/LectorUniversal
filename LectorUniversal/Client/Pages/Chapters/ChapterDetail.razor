@@ -19,7 +19,7 @@
         </MudStack>
     </MudContainer>
      <Pagination ></Pagination>
-    
+    <DisqusComments/>
 }else
 {
     <text>no hay registros</text>
@@ -27,8 +27,8 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    VisualiseBookDTO model;
-    List<Pages> ChapterPages;
+    private VisualiseBookDTO? model;
+    private List<Pages>? ChapterPages;
     private bool MostrarForm { get; set; } = false;
 
     protected async override Task OnInitializedAsync()
