@@ -1,6 +1,7 @@
 ﻿@page "/chapters/viewer/{Id:int}"
 @inject IRepository repository
 @inject IShowMessages showMessage
+@inject IJSRuntime _js
 @inject NavigationManager navigationManager
 
 
@@ -54,6 +55,4 @@
             MostrarForm = true;
         }
     }
-
-
 }

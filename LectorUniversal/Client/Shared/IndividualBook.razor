@@ -1,4 +1,6 @@
 ﻿@inject NavigationManager navigationManager
+@inject IJSRuntime _js
+
 <div class="form-group">
     <MudLink Href="@urlBook" Underline="Underline.None">
         <MudCard Style="width:250px; height:410px; margin-left:15px;" >
@@ -31,6 +33,4 @@
         urlBook = $"/books/{Books?.Id}/{Books?.Name?.Replace(" ","-")}";
         editUrlBook = $"books/edit/{Books?.Id}";
     }
-
-    
 }

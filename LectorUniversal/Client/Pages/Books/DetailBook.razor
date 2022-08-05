@@ -3,6 +3,7 @@
 @inject IRepository repository
 @inject NavigationManager navigateManager
 @inject IShowMessages showMessages
+@inject IJSRuntime js
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 
@@ -53,6 +54,8 @@ else
     [Parameter] public string BookName { get; set; }
     private VisualiseBookDTO model;
     private int selectedVal = 0;
+    private string url = string.Empty;
+    private string identifierId = string.Empty;
 
     private async Task OnVote(int voteSelected)
     {
@@ -74,6 +77,7 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
+        
         //Include token in request to get Votes
         if (user.Identity.IsAuthenticated)
         {
@@ -94,6 +98,8 @@ else
             else
             {
                 model = responseHttp.Response;
+                //url = navigateManager.BaseUri + "chapters/viewer/";
+                //identifierId = "chapters/viewer/";
             }
         }
         else
