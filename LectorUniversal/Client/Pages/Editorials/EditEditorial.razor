@@ -1,0 +1,62 @@
+﻿@page "/editorials/edit/{EditorialId:int}"
+@inject IRepository repository
+@inject IShowMessages showMessage
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
+
+@if (Editorial == null)
+{
+    <text>Cargando....</text>
+}
+else
+{
+    <EditorialForm OnValidSubmit="Edit" Editorials="Editorial" />    
+}
+
+@code {
+    [Parameter] public int EditorialId { get; set; }
+    private Editorial Editorial;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var httpResponse = await repository.Get<Editorial>($"api/editorials/{EditorialId}", includeToken:false);
+        if (httpResponse.Error)
+        {
+            if (httpResponse.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("editorials");
+            }
+            else
+            {
+                await showMessage.ShowErrorMessage(await httpResponse.GetBody());
+            }
+        }
+        else
+        {
+            Editorial = httpResponse.Response;
+        }
+
+    }
+
+    private async void Edit()
+    {
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Put("api/editorials", Editorial);
+                if (httpResponse.Error)
+                {
+                    await showMessage.ShowErrorMessage(await httpResponse.GetBody());
+                }
+                else
+                {
+                    navigationManager.NavigateTo("editorials");
+                }
+            }
+        }
+    }
+}

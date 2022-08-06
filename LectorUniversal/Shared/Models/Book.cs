@@ -7,7 +7,8 @@
         public BoBookTypes TypeofBook { get; set; }
         public string? Name { get; set; }
         public string? Cover { get; set; }
-        public string? Editorial { get; set; }
+        public string? Synopsis { get; set; }
+        public BooksEditorial? Editorial { get; set; }
         public virtual List<Chapter>? Chapters { get; set; }
         public List<BooksGender>? Genders { get; set; } = new List<BooksGender>();
     }

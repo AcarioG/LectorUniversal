@@ -1,0 +1,36 @@
+﻿@page "/editorials/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles ="admin")]
+
+
+<EditorialForm OnValidSubmit="CreateEditorial" Editorials="Editorial" />
+
+
+@code {
+    private Editorial Editorial = new Editorial();
+
+    private async Task CreateEditorial()
+    {
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            if (user.IsInRole("admin"))
+            {
+                var httpResponse = await repository.Post("api/editorials", Editorial);
+
+                if (httpResponse.Error)
+                {
+                    var body = await httpResponse.HttpResponseMessage.Content.ReadAsStringAsync();
+                    Console.WriteLine(body);
+                }
+                else
+                {
+                    navigationManager.NavigateTo("/editorials");
+                }
+            }
+        }
+    }
+}

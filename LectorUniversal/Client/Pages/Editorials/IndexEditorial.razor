@@ -1,0 +1,83 @@
+﻿@page "/editorials"
+@inject IRepository repository
+@inject IShowMessages showMessages
+@inject AuthenticationStateProvider stateProvider
+@attribute [Authorize(Roles = "admin")]
+
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <h3>Indice de Editoriales</h3>
+        <MudFab Color="Color.Surface" StartIcon="@Icons.Material.Filled.Add" Href="genders/create" Label="Agregar Genero" Size="Size.Medium" Style="margin-left:160px; margin-top:40px;" />
+        <GenericList Lists="Editorials">
+            <CompleteRecordsFound>
+                <div class="col-md-10" style="margin-left:160px; margin-top:40px;">
+                    <MudSimpleTable Dense="true" Hover="true" Bordered="true" Style="">
+                        <thead>
+                            <tr  style="background-color:lightgray">
+                                <th><b>Generos</b></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var editorial in Editorials)
+                            {
+                                <tr>
+                                    <td>@editorial.Name</td>
+                                    <td>
+                                       <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.ModeEdit" ButtonType="ButtonType.Button" 
+                                            Href="@($"/genders/edit/{editorial.Id}")" Color="Color.Warning" Size="Size.Small" ></MudIconButton>
+                                       <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"
+                                            @onclick="(() => DeleteEditorial(editorial))" Size="Size.Small" ></MudIconButton>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </MudSimpleTable>
+                </div>
+            </CompleteRecordsFound>
+        </GenericList>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    public List<Editorial>? Editorials {get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            if (user.IsInRole("admin"))
+            {
+                await LoadEditorials();
+            }
+        }
+    }
+
+    private async Task LoadEditorials()
+    {
+        var reponseHttp = await repository.Get<List<Editorial>>("api/editorials");
+        Editorials = reponseHttp.Response; 
+    }
+
+    private async Task DeleteEditorial(Editorial editorial)
+    {
+        var user = (await stateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            if (user.IsInRole("admin"))
+            {
+                var responseHttp = await repository.Delete($"api/editorials/{editorial.Id}");
+                if (responseHttp.Error)
+                {
+                    await showMessages.ShowErrorMessage(await responseHttp.GetBody());
+                }
+                else
+                {
+                    await LoadEditorials();
+                    StateHasChanged();
+                }
+            }
+        }
+    }
+}

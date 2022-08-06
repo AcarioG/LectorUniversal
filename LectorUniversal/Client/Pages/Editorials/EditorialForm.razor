@@ -1,0 +1,17 @@
+﻿<EditForm Model="Editorials" OnSubmit="OnValidSubmit">
+    <div class="col-md-3">
+        <div class="form-group">
+            <div>
+                <MudTextField @bind-Value="@Editorials.Name" Label="Genero" Variant="Variant.Text"></MudTextField>
+            </div>
+        </div>
+    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Success" ButtonType="ButtonType.Submit">Enviar</MudButton>
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public Editorial Editorials { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}
