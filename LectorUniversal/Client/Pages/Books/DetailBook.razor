@@ -13,20 +13,38 @@
 }
 else
 {
-     <MudPaper Outlined="true" Class="d-flex flex-">
-        <MudContainer Fixed=true Class="row-cols-2 ">
-            <MudImage Src="@model.Book.Cover" Width="230" Style="margin-top:10px; margin-bottom:5px; margin-left:10px; margin-right:5px;" />
-            <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+     <MudPaper Outlined="true" MaxWidth="1000">
+        <MudContainer Fixed="true" Class="d-flex flex-wrap">
+            <div class="flex-column ">
+                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center"   />
+            
+            </div>
+            <div class="flex-row col-6 col-sm-6 col-md-6 col-lg-6" style="flex-grow:1;">
+            <MudText Typo="Typo.h4">@model.Book.Name</MudText>
+            <div class="flex-column col-6 col-sm-6 col-md- col-lg-6" style="flex-grow:1; margin-left:15px;">
+
+                
+                <MudText Style="margin-bottom:20px;">@model.Book.Synopsis</MudText>
+                @for (var i = 0; i < model.Genders.Count(); i++)
+                {
+                    @GenderLinks(model.Genders[i])
+                }
+            </div>
+            </div>
+            
+            <div class="col-auto">
+                
+                
+            </div>
             
         </MudContainer>
-        <MudContainer Fixed="true" Class="flex-column col-8">
-            <MudText>@model.Book.Name</MudText>
-            <MudText>@model.Book.Synopsis</MudText>
-        </MudContainer>
+       @* <MudContainer Fixed="true" Class="row-cols-2">
+            <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+        </MudContainer>*@
         
 
     </MudPaper>
-    <div class="col-md-6">
+    <div class="col-12 col-sm-12 col-md-11 col-lg-9">
         <br/>
         <AuthorizeView Roles="admin">
             <Authorized>
@@ -51,11 +69,12 @@ else
 
 @code {
     [Parameter] public int Id { get; set; }
-    [Parameter] public string BookName { get; set; }
-    private VisualiseBookDTO model;
+    [Parameter] public string? BookName { get; set; }
+    private VisualiseBookDTO? model;
+    private RenderFragment<Gender> GenderLinks = 
+                (genders) => @<MudLink Href="@($"/buscar?genderid={genders.Id}")" Underline="Underline.None">
+                                                        <MudChip Color="Color.Primary" >@genders.Name</MudChip></MudLink>;
     private int selectedVal = 0;
-    private string url = string.Empty;
-    private string identifierId = string.Empty;
 
     private async Task OnVote(int voteSelected)
     {
@@ -98,8 +117,6 @@ else
             else
             {
                 model = responseHttp.Response;
-                //url = navigateManager.BaseUri + "chapters/viewer/";
-                //identifierId = "chapters/viewer/";
             }
         }
         else

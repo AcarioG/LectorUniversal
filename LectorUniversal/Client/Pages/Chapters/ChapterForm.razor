@@ -4,9 +4,6 @@
 <EditForm Model="Chapter" OnSubmit="OnDataAnnotationsValidated">
     <div class="col-lg-10">
         <div class="form-group">
-            @*<MudSelect T="BooksList" @bind-Value=@comicSelected Label="Comics">
-                    <MudSelectItem Value="@Books.Key">@Books.Name</MudSelectItem>
-            </MudSelect>*@
             <label>Comic:</label>
             <div>
                 <InputSelect @bind-Value=@comicSelected>

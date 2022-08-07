@@ -1,27 +1,22 @@
 ﻿@page "/"
 @inject IJSRuntime _js
+@inject IRepository repository
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world</h1>
+<ListBooks Books="Books"/>
 
-Welcome to your new app.!
-
-<SurveyPrompt Title="How is Blazor working for you?" />
-@*<div id="disqus_thread"></div>
 @code {
+    public List<Book> Books {get; set; }
 
-   
-
-    protected async override Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnInitializedAsync()
     {
-        if (firstRender)
+        var responseHttp = await repository.Get<List<Book>>("api/books/home", includeToken:false);
+
+        if (!responseHttp.Error)
         {
-            var jsoref = await _js.InvokeAsync<IJSInProcessObjectReference>("import", "./js/discuss.js");
-            await jsoref.InvokeVoidAsync("discussFunction");
+            Books = responseHttp.Response;
         }
     }
 
-
-
-}*@
+}

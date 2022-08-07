@@ -31,6 +31,16 @@ namespace LectorUniversal.Server.Controllers
             _userManager = userManager;
         }
 
+
+        [HttpGet("home")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<Book>>> GetNewest()
+        {
+            var books = await _db.Books.Include(x => x.Chapters).OrderByDescending(x => x.CreatedOn).Take(12).ToListAsync();
+
+            return books;
+        }
+
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
