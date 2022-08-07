@@ -14,6 +14,6 @@ namespace LectorUniversal.Shared
         public string? Name { get; set; }
         [NotMapped]
         [JsonIgnore]
-        public List<BooksEditorial>? BookEditorials { get; set; }
+        public List<Book>? BookEditorials { get; set; }
     }
 }

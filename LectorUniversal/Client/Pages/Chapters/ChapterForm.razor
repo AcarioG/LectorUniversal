@@ -34,9 +34,9 @@
 @code {
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
-    [Parameter] public Chapter Chapter {  get;  set; }
+    [Parameter] public Chapter? Chapter {  get;  set; }
     public Pages Pages { get; set; } = new Pages();
-    private string Images;
+    private string? Images;
     private string comicSelected = "0";
 
     private List<MultipleSelectorModel> Books { get; set; } = new List<MultipleSelectorModel>();

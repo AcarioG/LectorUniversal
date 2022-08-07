@@ -1,13 +1,9 @@
 ﻿@inject IRepository repository
+@inject IShowMessages showMessages
 
 <EditForm Model="Book" OnSubmit="OnDataAnnotationsValidated">
     <div class="col-md-5">
-        <div class="form-group col-md-5">
-            <label>Titulo:</label>
-            <div>
-                <InputText class=form-control @bind-Value=@Book.Name></InputText>
-            </div>
-        </div>
+                <MudTextField class=form-control @bind-Value=@Book.Name Label="Titulo"></MudTextField>
         <div class="form-group col-md-5">
             <label>Type:</label>
             <div>
@@ -25,12 +21,28 @@
     
         <div class="form-group col-md-5">
             <label>Editorial:</label>
-            <div>
-               @* <MudSelect T="">
-
+            <div class="form-control">
+                <InputSelect @bind-Value=@EditorialSelected>
+                    <option value="0">--Seleccione una editorial--</option>
+                    @foreach (var item in Editoriales)
+                    {
+                      <option value="@item.Key">@item.Value</option>
+                    }
+                </InputSelect>
+                
+                
+               @* <MudSelect T="Editorial" Label="Editorial">
+                    <MudSelectItem Value="0">Seleccione una editorial</MudSelectItem>
+                    @foreach (var item in Editorials)
+                    {
+                        <MudSelectItem T="Editorial" Value="@int.Parse(item.Id)">@item.Name</MudSelectItem>
+                    }
                 </MudSelect>*@
                 @*<InputText class=form-control @bind-Value=@Book.Editorial></InputText>*@
             </div>
+        </div>
+        <div class="form-group col-md-5">
+            <MudTextField T="string" @bind-Text="Book.Synopsis" Lines="8" Label="Sinopsis"></MudTextField>
         </div>
     <div class="form-group">
         <label>Gender:</label>
@@ -47,9 +59,12 @@
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Gender> GendersSelected {get;set;} = new List<Gender>();
     [Parameter] public List<Gender> GendersNotSelected {get;set;} = new List<Gender>();
+    [Parameter] public List<Editorial> Editorials { get; set; } = new List<Editorial>();
+    private string EditorialSelected = "0";
 
     private List<MultipleSelectorModel> Selected { get; set; } = new List<MultipleSelectorModel>();
     private List<MultipleSelectorModel> NotSelected { get; set; } = new List<MultipleSelectorModel>();
+    private List<MultipleSelectorModel> Editoriales { get; set; } = new List<MultipleSelectorModel>();
 
     private string ImageTemp;
 
@@ -59,6 +74,7 @@
     {
         Selected = GendersSelected.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
         NotSelected = GendersNotSelected.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+        Editoriales = Editorials.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
 
         if (!string.IsNullOrWhiteSpace(Book.Cover))
         {
@@ -79,7 +95,13 @@
 
     private async Task OnDataAnnotationsValidated()
     {
+        if (EditorialSelected == "0")
+        {
+            await showMessages.ShowErrorMessage("Debe seleccionar una Editorial");
+            return;
+        }
         Book.Genders = Selected.Select(x => new BooksGender { BookId = Book.Id, GenderId = int.Parse(x.Key) }).ToList();
+        Book.EditorialId = int.Parse(EditorialSelected);
 
         await OnValidSubmit.InvokeAsync(null);
     }

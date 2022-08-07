@@ -18,7 +18,8 @@ namespace LectorUniversal.Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<BooksGender>().HasKey(g => new { g.GenderId, g.BookId });
-            builder.Entity<BooksEditorial>().HasKey(e => new {e.EditorialId, e.BookId});
+            //builder.Entity<BooksEditorial>().HasKey(e => new {e.EditorialId, e.BookId});
+            builder.Entity<Editorial>().HasMany(e => e.BookEditorials).WithOne(b => b.Editorial).HasForeignKey(x => x.EditorialId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Book>().HasMany(c => c.Chapters).WithOne(b => b.Books).HasForeignKey(b => b.BooksId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Chapter>().HasMany(p => p.ChapterPages).WithOne(c => c.Chapter).HasForeignKey(c => c.ChapterId).OnDelete(DeleteBehavior.Cascade);
 
@@ -70,7 +71,7 @@ namespace LectorUniversal.Server.Data
         public DbSet<Shared.Pages> Pages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<BooksGender> GenderBooks { get; set; }
-        public DbSet<BooksEditorial> BooksEditorials { get; set; }
+        //public DbSet<BooksEditorial> BooksEditorials { get; set; }
         public DbSet<Editorial> Editorials { get; set; }
         public DbSet<Votes> BookVotes { get; set; }
     }

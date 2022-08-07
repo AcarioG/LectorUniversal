@@ -8,7 +8,7 @@
 <h3>Create</h3>
 @if (@MostrarForm != false)
 {
-    <BooksForm OnValidSubmit="CreateBook" Book="Book" GendersNotSelected="GendersNotSelected"/>
+    <BooksForm OnValidSubmit="CreateBook" Book="Book" GendersNotSelected="GendersNotSelected" Editorials="Editorials"/>
 }
 else
 {
@@ -20,11 +20,16 @@ else
     private bool MostrarForm { get; set; } = false;
     private Book Book = new Book();
     private List<Gender> GendersNotSelected = new List<Gender>();
+    private List<Editorial> Editorials = new List<Editorial>();
 
     protected async override Task OnInitializedAsync()
     {
         var responseHttp = await repository.Get<List<Gender>>("api/genders");
         GendersNotSelected = responseHttp.Response;
+
+        var Editorialresponse = await repository.Get<List<Editorial>>("api/editorials");
+        Editorials = Editorialresponse.Response;
+
 
         StateHasChanged();
         MostrarForm = true;
