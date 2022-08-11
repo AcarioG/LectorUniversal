@@ -5,22 +5,26 @@
 @inject NavigationManager navigationManager
 
 
-<div>
-    <h3>@model.Book.Name</h3> | <h3>@model.Chapters.Select(x => x.Title).FirstOrDefault()</h3> 
-</div>
+
 
 @if (@MostrarForm != false)
 {
-    <MudContainer Fixed="true" Class="col-11 col-sm-12 col-md-11 col-lg-10 col-xl-6">
-        <MudStack Spacing="1"    >
+    
+    <MudContainer  Class="d-flex flex-column col-12 col-sm-12 col-lg-9">
+        <div class="d-inline-flex flex-row text-black justify-content-center">
+            <MudText Typo="Typo.h4">@model.Book.Name | @model.Chapters.Select(x => x.Title).FirstOrDefault()</MudText>
+</div>
+        <MudStack Spacing="1" class="justify-content-center" style="margin-left:20px;" >
         @foreach (var item in ChapterPages)
         {
             <MudImage Src="@item.ImageUrl"  />
         }
         </MudStack>
-    </MudContainer>
-     <Pagination ></Pagination>
+
+        <Pagination ></Pagination>
     <DisqusComments/>
+    </MudContainer>
+     
 }else
 {
     <text>no hay registros</text>

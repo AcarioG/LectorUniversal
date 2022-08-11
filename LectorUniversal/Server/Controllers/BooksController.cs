@@ -36,7 +36,18 @@ namespace LectorUniversal.Server.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<List<Book>>> GetNewest()
         {
+            //List<Book> book = new List<Book>();
+            //var books = String.Format("SELECT T1.Name, T1.Cover, MAX(T0.CreatedOn) FROM Chapters T0 INNER JOIN Books T1 ON T0.BooksId = T1.Id GROUP BY T1.Name,T0.BooksId, T1.Cover ORDER BY MAX(T1.CreatedOn) DESC;");
+
+            //var results = Task.Run(() => _db.Database.ExecuteSqlInterpolatedAsync($"SELECT T0.* FROM [UltimosComics] T0 GROUP BY T0.NombreComic, T0.Cover, T0.FechaChapter ORDER BY MAX(T0.FechaChapter) DESC")).GetAwaiter().GetResult();
+            //var chapters = await _db.Chapters.Distinct().OrderByDescending(x => x.CreatedOn).ToListAsync();
             var books = await _db.Books.Include(x => x.Chapters).OrderByDescending(x => x.CreatedOn).Take(12).ToListAsync();
+            //var books = await _db.Books.ToListAsync();
+            //var books = results.OrderByDescending(x => x.Chapters.Max(x =>x.CreatedOn)).ToList();
+            //var model = new VisualiseBookDTO();
+
+            //model.Chapters = chapters;
+            //model.Book = books.FirstOrDefault();
 
             return books;
         }

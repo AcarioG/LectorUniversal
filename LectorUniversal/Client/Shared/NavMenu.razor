@@ -10,25 +10,20 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
             <NavLink class="nav-link" href="books">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Books
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Biblioteca
             </NavLink>
         </div>
         <AuthorizeView Roles="admin">
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="genders">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Genders
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Generos
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="users">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Users
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Usuarios
                     </NavLink>
                 </div>
             </Authorized>
