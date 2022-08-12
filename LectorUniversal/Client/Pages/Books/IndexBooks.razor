@@ -29,9 +29,9 @@
         var responseHttp = await repository.Get<List<Book>>($"api/books?pagination={page}", includeToken:false);
         if (!responseHttp.Error)
         {
-            Books = responseHttp.Response;
             var count = responseHttp.HttpResponseMessage.Headers.GetValues("countRecord").FirstOrDefault();
             MaxPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("TotalRecords").FirstOrDefault());
+            Books = responseHttp.Response;
         }
     }
 
