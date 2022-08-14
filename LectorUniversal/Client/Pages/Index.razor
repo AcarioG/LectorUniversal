@@ -2,9 +2,7 @@
 @inject IJSRuntime _js
 @inject IRepository repository
 
-<PageTitle>Index</PageTitle>
-
-<ListBooks Books="Books"/>
+<NewComcis Books="Books" />
 
 @code {
     public List<Book> Books {get; set; }

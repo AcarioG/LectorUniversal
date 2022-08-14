@@ -1,0 +1,20 @@
+﻿
+<MudLink Href="@urlBook" Underline="Underline.None">
+    <MudCard Elevation="0" Outlined="true" Style="width:160px; height:320px; margin-left:10px;"  >
+        <MudCardMedia Image="@NewBooks.Cover.ToString()" Style="width:140px; height:240px; margin-top:10px; margin-left:10px;" />
+        <MudCardContent>
+            <MudText Typo="Typo.subtitle2" Align="Align.Center">@NewBooks.ShortName</MudText>
+        </MudCardContent>
+    </MudCard>
+</MudLink>
+
+@code {
+    [Parameter] public Book NewBooks { get; set; }
+     private string urlBook = string.Empty;
+    private string editUrlBook = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        urlBook = $"/books/{NewBooks?.Id}/{NewBooks?.Name?.Replace(" ","-")}";
+    }
+}

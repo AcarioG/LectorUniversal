@@ -1,0 +1,28 @@
+﻿
+    <MudList Clickable="true">
+    @foreach (var item in model.Chapters)
+    {
+        <MudListItem Text="@item.Title" Dense="true">
+            <NestedList>
+                <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
+                    <MudListItem Text="@item.Title" />
+                </MudLink>
+                
+                <AuthorizeView Roles="admin">
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+            @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Medium" Style="" ></MudIconButton>
+                </AuthorizeView>
+                        
+            </NestedList>
+             
+        </MudListItem>
+       
+    }
+</MudList>
+    
+
+         
+@code {
+    [Parameter] public VisualiseBookDTO model { get; set; }
+    [Parameter] public EventCallback<Chapter> DeleteChapter { get; set; }
+}

@@ -65,5 +65,26 @@ namespace LectorUniversal.Server.Controllers
             return chapter.Id;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exits = await _db.Chapters.AsNoTracking().AnyAsync(x => x.Id == id);
+            if (!exits) { return NotFound(); }
+
+            var chapter = await _db.Chapters.AsNoTracking().Where(x => x.Id == id)
+                .Include(x => x.Books).Where(x => x.BooksId == x.Books.Id).FirstOrDefaultAsync();
+
+            var pages = await _db.Pages.Where(x => x.ChapterId == id).FirstOrDefaultAsync();
+
+            var folder = $"{chapter.Books.Name.Replace(" ", "-").Replace(":", "").Replace("#", "")}/{chapter.Title.Replace(" ", "-").Replace(":", "").Replace("#", "")}";
+            var bookType = Enum.GetName(chapter.Books.TypeofBook);
+            bool complete = true;
+            await _fileUpload.DeleteChapter(folder, bookType, pages.ImageUrl, complete);
+
+            _db.Remove(new Chapter{ Id = id });
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }

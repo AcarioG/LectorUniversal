@@ -33,9 +33,22 @@ namespace LectorUniversal.Server.Helpers
 
                 Directory.Delete(directory, true);
             }
+            return Task.FromResult(0);
+        }
 
-            
+        public Task DeleteChapter(string Folder, string Type, string ImgUrl, bool complete)
+        {
+            string directory;
 
+            if (complete == true)
+            {
+                directory = Path.Combine(_webHostEnvironment.WebRootPath, Type, Folder);
+
+                if (Directory.Exists(directory))
+                {
+                    Directory.Delete(directory,true);
+                }
+            }
             return Task.FromResult(0);
         }
 

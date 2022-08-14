@@ -3,6 +3,7 @@
 @inject IRepository repository
 @inject NavigationManager navigateManager
 @inject IShowMessages showMessages
+@inject IDialogService dialogService
 @inject IJSRuntime js
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -32,15 +33,10 @@ else
             </div>
             </div>
             
-            <div class="col-auto">
-                
-                
-            </div>
-            
         </MudContainer>
-       @* <MudContainer Fixed="true" Class="row-cols-2">
+        <MudContainer Fixed="true" Class="row-cols-2">
             <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
-        </MudContainer>*@
+        </MudContainer>
         
 
     </MudPaper>
@@ -52,18 +48,7 @@ else
             </Authorized>
         </AuthorizeView>
         <br/>
-        <MudList Clickable="true">
-            @foreach (var item in model.Chapters)
-            {
-                <MudListItem Text="@item.Title">
-                    <NestedList>
-                        <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
-                            <MudListItem Text="@item.Title" />
-                        </MudLink>
-                    </NestedList>
-                </MudListItem>
-            }
-         </MudList>
+        <ListChapters model="model" DeleteChapter="DeleteChapters"></ListChapters>
     </div>
 }
 
@@ -75,6 +60,7 @@ else
                 (genders) => @<MudLink Href="@($"/buscar?genderid={genders.Id}")" Underline="Underline.None">
                                                         <MudChip Color="Color.Primary" >@genders.Name</MudChip></MudLink>;
     private int selectedVal = 0;
+    
 
     private async Task OnVote(int voteSelected)
     {
@@ -139,6 +125,27 @@ else
             else
             {
                 model = responseHttp.Response;
+            }
+        }
+    }
+
+    async Task DeleteChapters(Chapter chapter)
+    {
+        var options = new DialogOptions { CloseButton = false, CloseOnEscapeKey = true, Position = DialogPosition.Center };
+        var dialog = dialogService.Show<DeleteComicDialog>("Elimando Comic", options);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            var responseHttp = await repository.Delete($"api/chapters/{chapter.Id}");
+            if (responseHttp.Error)
+            {
+                await showMessages.ShowErrorMessage(await responseHttp.GetBody());
+            }
+            else
+            {
+                model.Chapters.Remove(chapter);
+                await showMessages.ShowSuccessMessage($"Publicacion {chapter.Title} eliminada");
             }
         }
     }
