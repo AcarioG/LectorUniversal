@@ -37,7 +37,7 @@ namespace LectorUniversal.Server.Controllers
         public async Task<ActionResult<List<Book>>> GetNewest()
         {
             //Get 12 books
-            var books = await _db.Books.Include(x => x.Chapters).OrderByDescending(x => x.CreatedOn).Take(12).ToListAsync();
+            var books = await _db.Books.Include(x => x.Chapters).OrderByDescending(x => x.CreatedOn).Take(14).ToListAsync();
             //Order previous books by date desc to get the newest book with chapter
             var results = books.OrderByDescending(c => c.Chapters.Max(x => x.CreatedOn)).ToList();
 

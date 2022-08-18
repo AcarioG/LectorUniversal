@@ -1,4 +1,4 @@
-﻿@page "/chapter/create"
+﻿@page "/book/{book:int}/chapter/create"
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject IShowMessages showMessages
@@ -7,7 +7,7 @@
 
 @if (@MostrarForm != false)
 {
-    <ChapterForm OnValidSubmit="CreateChapter" Chapter="Chapter" BooksList="BooksList" />
+    <ChapterForm OnValidSubmit="CreateChapter" Chapter="Chapter" BooksList="BooksList" IdComic="book" />
 }
 else
 {

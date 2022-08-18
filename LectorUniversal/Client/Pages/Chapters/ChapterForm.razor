@@ -4,15 +4,15 @@
 <EditForm Model="Chapter" OnSubmit="OnDataAnnotationsValidated">
     <div class="col-lg-10">
         <div class="form-group">
-            <label>Comic:</label>
             <div>
-                <InputSelect @bind-Value=@comicSelected>
+                <InputText class="form-control" @bind-Value=@comicSelected disabled hidden></InputText>
+                @*<InputSelect @bind-Value=@comicSelected>
                     <option value="0">---Seleccione un comic</option>
                     @foreach (var item in Books)
                     {
                       <option value="@item.Key">@item.Value</option>
                     }
-                </InputSelect>
+                </InputSelect>*@
             </div>
         </div>
         <div class="form-group col-md-5">
@@ -32,6 +32,7 @@
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Book> BooksList { get; set; } = new List<Book>();
     [Parameter] public Chapter? Chapter {  get;  set; }
+    [Parameter] public int IdComic { get; set; }
     public Pages Pages { get; set; } = new Pages();
     private string? Images;
     private string comicSelected = "0";
@@ -41,6 +42,7 @@
     protected override void OnInitialized()
     {
         Books = BooksList.Select(x => new MultipleSelectorModel(x.Id.ToString(),x.Name)).ToList();
+        comicSelected = IdComic.ToString();
     }
 
     private async Task ImageSelected(List<string> ImageBase64)
@@ -50,7 +52,6 @@
             Images = item;
         }
         Chapter.ChapterPages.Add(new Pages() { ImageUrl = Images });
-
     }
 
     private async Task OnDataAnnotationsValidated()

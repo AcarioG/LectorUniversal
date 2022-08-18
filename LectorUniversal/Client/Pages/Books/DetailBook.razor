@@ -17,7 +17,7 @@ else
      <MudPaper Outlined="true" MaxWidth="1000">
         <MudContainer Fixed="true" Class="d-flex flex-wrap">
             <div class="flex-column ">
-                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center"   />
+                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center" />
             
             </div>
             <div class="flex-row col-6 col-sm-6 col-md-6 col-lg-6" style="flex-grow:1; margin-left:15px;">
@@ -37,14 +37,12 @@ else
         <MudContainer Fixed="true" Class="row-cols-2">
             <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
         </MudContainer>
-        
-
     </MudPaper>
     <div class="col-12 col-sm-12 col-md-11 col-lg-9">
         <br/>
         <AuthorizeView Roles="admin">
             <Authorized>
-                <a href="/chapter/create" class="btn btn-success">Agregar Capitulo</a>
+                <a href="@IdComic" class="btn btn-success">Agregar Capitulo</a>
             </Authorized>
         </AuthorizeView>
         <br/>
@@ -58,9 +56,12 @@ else
     private VisualiseBookDTO? model;
     private RenderFragment<Gender> GenderLinks = 
                 (genders) => @<MudLink Href="@($"/buscar?genderid={genders.Id}")" Underline="Underline.None">
-                                                        <MudChip Color="Color.Primary" >@genders.Name</MudChip></MudLink>;
+                                            <MudChip Color="Color.Primary" >@genders.Name</MudChip>
+        </MudLink>
+    ;
     private int selectedVal = 0;
-    
+    private string IdComic = string.Empty;
+
 
     private async Task OnVote(int voteSelected)
     {
@@ -79,6 +80,7 @@ else
 
     protected async override Task OnInitializedAsync()
     {
+        IdComic = $"book/{Id}/chapter/create";
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
