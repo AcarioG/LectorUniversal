@@ -14,7 +14,8 @@ else
 {
     <BooksForm Book="Book" OnValidSubmit="Edit" 
            GendersNotSelected="GenderNotSelected"
-           GendersSelected="GenderSelected"></BooksForm>
+           GendersSelected="GenderSelected" 
+           Editorials="Editorials"></BooksForm>
 }
 
 @code {
@@ -22,6 +23,7 @@ else
     Book Book; 
     private List<Gender> GenderSelected = new List<Gender>();
     private List<Gender> GenderNotSelected = new List<Gender>();
+    private List<Editorial> Editorials = new List<Editorial>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -45,6 +47,9 @@ else
             GenderSelected = model.GendersSelected;
             Book = model.Book;
         }
+
+         var Editorialresponse = await repository.Get<List<Editorial>>("api/editorials");
+             Editorials = Editorialresponse.Response;
     }
 
     private async Task Edit()

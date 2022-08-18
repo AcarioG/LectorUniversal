@@ -20,7 +20,7 @@
             <MudImage Src="@item.ImageUrl"  />
         }
         </MudStack>
-
+        @*<button class="btn btn-success" @onclick="Previous"></button>*@
         <Pagination ></Pagination>
     <DisqusComments/>
     </MudContainer>
@@ -35,6 +35,8 @@
     VisualiseBookDTO? model;
     List<Pages>? ChapterPages;
     private bool MostrarForm { get; set; } = false;
+    private string previous { get; set; }
+    private string next { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -55,8 +57,15 @@
         {
             model = responseHttp.Response;
             ChapterPages = model.Pages;
+
             StateHasChanged();
             MostrarForm = true;
         }
     }
+
+    //private void Previous()
+    //{
+    //    previous = $"/chapters/viewer/{model.Chapters.OrderByDescending(x => x.Id).Where(w => w.Id < Id)}";
+    //    navigationManager.NavigateTo($"{previous}");
+    //}
 }
