@@ -1,15 +1,5 @@
 ﻿@inject IShowMessages showMessages
 
-@*@for (int i = 1; i < 5; i++)
-{
-    var stars = i;
-    <span @onclick="(() => onclickHandle(stars))"
-        @onmouseover="(() => onmouseoverHandle(stars))"
-        style="cursor:pointer"
-        class="">
-
-    </span>
-}*@
 <MudRating SelectedValue="ScoreSelected" SelectedValueChanged="onclickHandle" />
 
 @code {

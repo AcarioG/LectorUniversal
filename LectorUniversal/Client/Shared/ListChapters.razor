@@ -1,28 +1,53 @@
-﻿
-    <MudList Clickable="true">
+﻿@inject IRepository repository
+@inject IShowMessages showMessages
+
+<MudPaper Outlined="true" Elevation="0" Class="col-lg-8" >
+    <MudList Clickable="true" Class="d-flex flex-column" >
     @foreach (var item in model.Chapters)
     {
-        <MudListItem Text="@item.Title" Dense="true">
-            <NestedList>
-                <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
-                    <MudListItem Text="@item.Title" />
-                </MudLink>
-                
+        <div class="d-inline-flex">
+             <div class="flex-column col-10 col-sm-10 col-md-11 col-lg-11">
+                <MudListItem Text="@item.Title" Dense="true">
+                    <NestedList>
+                            <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
+                                <MudListItem Text="@item.Title" />
+                            </MudLink>
+                    </NestedList>
+                </MudListItem>
+            </div>
+            <div class="flex-column">
+                <MudRating MaxValue="1"  FullIcon="@Icons.Material.Filled.Visibility" EmptyIcon="@Icons.Material.Filled.VisibilityOff" />
                 <AuthorizeView Roles="admin">
                     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-            @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Medium" Style="" ></MudIconButton>
+                        @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Small">
+                    </MudIconButton>
                 </AuthorizeView>
-                        
-            </NestedList>
-             
-        </MudListItem>
-       
+            </div>
+        </div>
+       <MudDivider DividerType="DividerType.FullWidth" />
     }
-</MudList>
-    
+    </MudList>
+</MudPaper>
 
-         
 @code {
     [Parameter] public VisualiseBookDTO model { get; set; }
     [Parameter] public EventCallback<Chapter> DeleteChapter { get; set; }
+
+
+
+    //private async Task ViewChapter(string viewed)
+    //{
+    //    model. = viewed;
+    //    var voteBook = new BookFollow() { BookState = viewed, BookId = model.Book.Id  };
+    //    var responseHttp = await repository.Post("api/votes", voteBook);
+    //    if (responseHttp.Error)
+    //    {
+    //        showMessages.ShowWarningMessage("No se ha procesado su voto");
+    //    }
+    //    else
+    //    {
+    //        showMessages.ShowSuccessMessage("Su voto ha sido recibido!");
+    //    }
+    //}
+
 }

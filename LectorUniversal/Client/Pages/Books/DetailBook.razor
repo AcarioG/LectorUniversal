@@ -14,28 +14,38 @@
 }
 else
 {
-     <MudPaper Outlined="true" MaxWidth="1000">
+     <MudPaper Outlined="true">
         <MudContainer Fixed="true" Class="d-flex flex-wrap">
-            <div class="flex-column ">
-                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center" />
+            <div class="flex-column align-content-center">
+                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center"  />
             
             </div>
             <div class="flex-row col-6 col-sm-6 col-md-6 col-lg-6" style="flex-grow:1; margin-left:15px;">
-            <MudText Typo="Typo.h4">@model.Book.Name</MudText>
-            <div class="flex-column col-12 col-sm-12 col-md-12 col-lg-12" style="flex-grow:1; ">
+                <MudText Typo="Typo.h4">@model.Book.Name</MudText>
+                <div class="flex-column col-12 col-sm-12 col-md-12 col-lg-12" style="flex-grow:1; ">
 
                 
-                <MudText Style="margin-bottom:20px;">@model.Book.Synopsis</MudText>
-                @for (var i = 0; i < model.Genders.Count(); i++)
-                {
-                    @GenderLinks(model.Genders[i])
-                }
-            </div>
+                    <MudText Style="margin-bottom:20px;" >@model.Book.Synopsis</MudText>
+                    <MudText Typo="Typo.h6">Generos</MudText>
+                    @for (var i = 0; i < model.Genders.Count(); i++)
+                    {
+                        @GenderLinks(model.Genders[i])
+                    }
+                    <MudText Typo="Typo.h6">Editorial</MudText>
+                    <MudChip Color="Color.Primary">@model.Book.Editorial.Name</MudChip>
+                    <MudText Typo="Typo.h6">Rating</MudText>
+                    <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+                </div>
             </div>
             
         </MudContainer>
-        <MudContainer Fixed="true" Class="row-cols-2">
-            <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+        <MudContainer Fixed="true" Class="d-inline-flex align-content-center">
+                <MudChipSet @bind-SelectedChip="selectedChip" Filter="true">
+                    <MudChip Text="Leido" Color="Color.Success" OnClick="@(() => State(@selectedChip.Text))">Leido</MudChip>
+                    <MudChip Text="Pendiente" Color="Color.Warning" OnClick="@(() => State(@selectedChip.Text))">Pendiente</MudChip>
+                    <MudChip Text="Siguiendo" Color="Color.Info" OnClick="@(() => State(@selectedChip.Text))">Siguiendo</MudChip>
+                    <MudChip Text="Abandonado" Color="Color.Error" OnClick="@(() => State(@selectedChip.Text))">Abandonado</MudChip>
+                </MudChipSet>
         </MudContainer>
     </MudPaper>
     <div class="col-12 col-sm-12 col-md-11 col-lg-9">
@@ -61,6 +71,7 @@ else
     ;
     private int selectedVal = 0;
     private string IdComic = string.Empty;
+    MudChip? selectedChip;
 
 
     private async Task OnVote(int voteSelected)
@@ -75,6 +86,21 @@ else
         else
         {
             showMessages.ShowSuccessMessage("Su voto ha sido recibido!");
+        }
+    }
+
+    private async Task State(string state)
+    {
+        model.BookState = state;
+        var stateBook = new BookFollow() { BookState = state, BookId = Id };
+        var responseHttp = await repository.Post("api/follow", stateBook);
+         if (responseHttp.Error)
+        {
+            showMessages.ShowWarningMessage("No se ha procesado su clasificacion");
+        }
+        else
+        {
+            showMessages.ShowSuccessMessage("Su clasificacion ha sido recibida!");
         }
     }
 

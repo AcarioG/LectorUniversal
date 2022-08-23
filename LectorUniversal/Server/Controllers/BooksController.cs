@@ -48,17 +48,23 @@ namespace LectorUniversal.Server.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
         {
+            var Editorial = await _db.Editorials.FirstOrDefaultAsync();
+
             var Book = await _db.Books.Where(x => x.Id == id)
                 .Include(x => x.Genders).ThenInclude(x => x.Gender)
+                .Include(x => x.Editorial).Where(x => x.EditorialId == Editorial.Id)
                 .Include(x => x.Chapters.Where(c => c.BooksId == id))
                 .FirstOrDefaultAsync();
+
+            
 
             if (Book == null) { return NotFound(); } 
 
             var averageVote = 0.0;
             var userVote = 0;
+            var userState = "";
 
-            if(await _db.BookVotes.AnyAsync(x => x.BookId == id))
+            if (await _db.BookVotes.AnyAsync(x => x.BookId == id))
             {
                 //Get the average votes from a comic
                 averageVote = await _db.BookVotes.Where(x => x.BookId == id).AverageAsync(x => x.Vote);
@@ -78,12 +84,29 @@ namespace LectorUniversal.Server.Controllers
                 }
             }
 
+            if (await _db.BookFollows.AnyAsync(x => x.BookId == id))
+            {
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                    var userId = user.Id;
+
+                    var userDBState = await _db.BookFollows.FirstOrDefaultAsync(x => x.BookId == id && x.UserId == userId);
+
+                    if (userDBState != null)
+                    {
+                       userState = userDBState.BookState;
+                    }
+                }
+            }
+
             var model = new VisualiseBookDTO();
             model.Book = Book;
             model.Genders = Book.Genders.Select(x => x.Gender).ToList();
             model.Chapters = Book.Chapters.ToList();
             model.AverageVote = averageVote;
             model.UserVote = userVote;
+            model.BookState = userState;
 
             return model;
         }
