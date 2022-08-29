@@ -9,14 +9,14 @@
              <div class="flex-column col-10 col-sm-10 col-md-11 col-lg-11">
                 <MudListItem Text="@item.Title" Dense="true">
                     <NestedList>
-                            <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None">
-                                <MudListItem Text="@item.Title" />
+                            <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None"  >
+                                <MudListItem Text="@item.Title"  />
                             </MudLink>
                     </NestedList>
                 </MudListItem>
             </div>
             <div class="flex-column">
-                <MudRating MaxValue="1"  FullIcon="@Icons.Material.Filled.Visibility" EmptyIcon="@Icons.Material.Filled.VisibilityOff" />
+                @*<MudRating MaxValue="1" SelectedValue="ChapterSelected" SelectedValueChanged="onclickHandle2" FullIcon="@Icons.Material.Filled.Visibility" EmptyIcon="@Icons.Material.Filled.VisibilityOff" />*@
                 <AuthorizeView Roles="admin">
                     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
                         @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Small">
@@ -32,22 +32,32 @@
 @code {
     [Parameter] public VisualiseBookDTO model { get; set; }
     [Parameter] public EventCallback<Chapter> DeleteChapter { get; set; }
+    [Parameter] public int ChapterSelected { get; set; }
+    [Parameter] public EventCallback<int> OnMark { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> authenticationState { get; set; }
 
+    private async Task onclickHandle(int mark)
+    {
+        var authState = await authenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            ChapterSelected = mark;
+            await OnMark.InvokeAsync(ChapterSelected);
+        }
+    }
 
-
-    //private async Task ViewChapter(string viewed)
-    //{
-    //    model. = viewed;
-    //    var voteBook = new BookFollow() { BookState = viewed, BookId = model.Book.Id  };
-    //    var responseHttp = await repository.Post("api/votes", voteBook);
-    //    if (responseHttp.Error)
-    //    {
-    //        showMessages.ShowWarningMessage("No se ha procesado su voto");
-    //    }
-    //    else
-    //    {
-    //        showMessages.ShowSuccessMessage("Su voto ha sido recibido!");
-    //    }
-    //}
+    private async Task onclickHandle2(int mark)
+    {
+        var authState = await authenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            ChapterSelected = mark;
+            await OnMark.InvokeAsync(ChapterSelected);
+        }
+        else
+        {
+            showMessages.ShowWarningMessage("Para usar esta funcionalidad, debe logearse.");
+        }
+    }
 
 }

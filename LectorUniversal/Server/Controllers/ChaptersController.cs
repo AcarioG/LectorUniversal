@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using LectorUniversal.Server.Data;
 using LectorUniversal.Server.Helpers;
+using LectorUniversal.Server.Models;
 using LectorUniversal.Shared;
 using LectorUniversal.Shared.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,13 @@ namespace LectorUniversal.Server.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IMapper _mapper;
         private readonly IFileUpload _fileUpload;
-        public ChaptersController(ApplicationDbContext db, IMapper mapper, IFileUpload fileUpload)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ChaptersController(ApplicationDbContext db, IMapper mapper, IFileUpload fileUpload, UserManager<ApplicationUser> userManager)
         {
             _db = db;
             _mapper = mapper;
             _fileUpload = fileUpload;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -55,6 +59,30 @@ namespace LectorUniversal.Server.Controllers
             //model.Genders = chapter.Select(x => x.Books.Genders.Select(x => x.Gender).ToList());
 
             return model;
+        }
+
+        [HttpPost("mark")]
+        public async Task<IActionResult> MarkChapter(ChapterFinished mark)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var userId = user.Id;
+
+            var markActual = await _db.ChapterFinisheds
+                .FirstOrDefaultAsync(x => x.ChapterId == mark.ChapterId && x.UserId == userId);
+
+            if (markActual == null)
+            {
+                mark.UserId = userId;
+                _db.Add(mark);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                markActual.Finished = mark.Finished;
+                await _db.SaveChangesAsync();
+            }
+
+            return NoContent();
         }
 
         [HttpPost]

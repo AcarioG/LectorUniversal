@@ -1,0 +1,32 @@
+﻿@inject IShowMessages showMessages
+
+<MudChipSet SelectedChip="selected" SelectedChipChanged="onclickHandle" Filter="true">
+    <MudChip Text="Leido" Color="Color.Success" Default="Default1">Leido</MudChip>
+    <MudChip Text="Pendiente" Color="Color.Warning" Default="Default2">Pendiente</MudChip>
+    <MudChip Text="Siguiendo" Color="Color.Info" Default="Default3">Siguiendo</MudChip>
+    <MudChip Text="Abandonado" Color="Color.Error" Default="Default4">Abandonado</MudChip>
+</MudChipSet>
+
+@code {
+    [Parameter] public MudChip? selected { get; set; }
+    [Parameter] public EventCallback<MudChip> StateFollow { get; set; }
+    [Parameter] public bool Default1 { get; set; }
+    [Parameter] public bool Default2 { get; set; }
+    [Parameter] public bool Default3 { get; set; }
+    [Parameter] public bool Default4 { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> authenticationState { get; set; }
+
+    private async Task onclickHandle(MudChip follow)
+    {
+        var authState = await authenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            selected = follow;
+            await StateFollow.InvokeAsync(selected);
+        }
+        else
+        {
+            showMessages.ShowWarningMessage("Para usar esta funcionalidad, debe logearse.");
+        }
+    }
+}

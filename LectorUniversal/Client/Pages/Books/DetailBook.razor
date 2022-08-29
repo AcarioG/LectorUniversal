@@ -17,7 +17,7 @@ else
      <MudPaper Outlined="true">
         <MudContainer Fixed="true" Class="d-flex flex-wrap">
             <div class="flex-column align-content-center">
-                <MudImage Width="230" Src="@model.Book.Cover" Class="align-content-sm-center"  />
+                <MudImage Width="250" Src="@model.Book.Cover" Class="align-content-sm-center"  />
             
             </div>
             <div class="flex-row col-6 col-sm-6 col-md-6 col-lg-6" style="flex-grow:1; margin-left:15px;">
@@ -26,6 +26,7 @@ else
 
                 
                     <MudText Style="margin-bottom:20px;" >@model.Book.Synopsis</MudText>
+                    <MudDivider DividerType="DividerType.FullWidth" Light="true" />
                     <MudText Typo="Typo.h6">Generos</MudText>
                     @for (var i = 0; i < model.Genders.Count(); i++)
                     {
@@ -35,17 +36,20 @@ else
                     <MudChip Color="Color.Primary">@model.Book.Editorial.Name</MudChip>
                     <MudText Typo="Typo.h6">Rating</MudText>
                     <Rating OnVote="OnVote" ScoreSelected="@model.UserVote" />
+                    <MudText Typo="Typo.h6">Clasificacion</MudText>
+                    <MudChipSet @bind-SelectedChip="selectedChip" Filter="true">
+                        <MudChip Text="Leido" Color="Color.Success" Default="Default1" OnClick="@(() => State(@selectedChip.Text))">Leido</MudChip>
+                        <MudChip Text="Pendiente" Color="Color.Warning" Default="Default2" OnClick="@(() => State(@selectedChip.Text))">Pendiente</MudChip>
+                        <MudChip Text="Siguiendo" Color="Color.Info" Default="Default3" OnClick="@(() => State(@selectedChip.Text))">Siguiendo</MudChip>
+                        <MudChip Text="Abandonado" Color="Color.Error" Default="Default4" OnClick="@(() => State(@selectedChip.Text))">Abandonado</MudChip>
+                    </MudChipSet>
                 </div>
             </div>
             
         </MudContainer>
-        <MudContainer Fixed="true" Class="d-inline-flex align-content-center">
-                <MudChipSet @bind-SelectedChip="selectedChip" Filter="true">
-                    <MudChip Text="Leido" Color="Color.Success" OnClick="@(() => State(@selectedChip.Text))">Leido</MudChip>
-                    <MudChip Text="Pendiente" Color="Color.Warning" OnClick="@(() => State(@selectedChip.Text))">Pendiente</MudChip>
-                    <MudChip Text="Siguiendo" Color="Color.Info" OnClick="@(() => State(@selectedChip.Text))">Siguiendo</MudChip>
-                    <MudChip Text="Abandonado" Color="Color.Error" OnClick="@(() => State(@selectedChip.Text))">Abandonado</MudChip>
-                </MudChipSet>
+        <MudContainer Fixed="true" Class="d-inline-flex justify-content-center align-content-center">
+            
+                @*<FollowBook StateFollow="State" selected="selected" Default1="Default1" Default2="Default2" Default3="Default3" Default4="Default4" />*@
         </MudContainer>
     </MudPaper>
     <div class="col-12 col-sm-12 col-md-11 col-lg-9">
@@ -56,22 +60,26 @@ else
             </Authorized>
         </AuthorizeView>
         <br/>
-        <ListChapters model="model" DeleteChapter="DeleteChapters"></ListChapters>
+        <ListChapters model="model" DeleteChapter="DeleteChapters" OnMark="MarkChapter" ChapterSelected="markChap"></ListChapters>
     </div>
 }
 
 @code {
     [Parameter] public int Id { get; set; }
     [Parameter] public string? BookName { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> authenticationState { get; set; }
     private VisualiseBookDTO? model;
     private RenderFragment<Gender> GenderLinks = 
                 (genders) => @<MudLink Href="@($"/buscar?genderid={genders.Id}")" Underline="Underline.None">
                                             <MudChip Color="Color.Primary" >@genders.Name</MudChip>
-        </MudLink>
-    ;
-    private int selectedVal = 0;
+        </MudLink>;
+    private int markChap = 0;
     private string IdComic = string.Empty;
     MudChip? selectedChip;
+    private bool Default1 = false;
+    private bool Default2 = false;
+    private bool Default3 = false;
+    private bool Default4 = false;
 
 
     private async Task OnVote(int voteSelected)
@@ -89,18 +97,37 @@ else
         }
     }
 
-    private async Task State(string state)
+    private async Task MarkChapter(int markChapter)
     {
-        model.BookState = state;
-        var stateBook = new BookFollow() { BookState = state, BookId = Id };
-        var responseHttp = await repository.Post("api/follow", stateBook);
-         if (responseHttp.Error)
+        model.Mark = markChapter;
+        var stateBook = new ChapterFinished() { Finished = markChapter, ChapterId = model.Chapters.Select(x => x.Id).FirstOrDefault()  };
+        var responseHttp = await repository.Post("api/chapters/mark", stateBook);
+        if (responseHttp.Error)
         {
             showMessages.ShowWarningMessage("No se ha procesado su clasificacion");
         }
+    }
+
+    private async Task State(string follow)
+    {
+        var authState = await authenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            model.BookState = follow;
+            var stateBook = new BookFollow() { BookState = follow, BookId = Id };
+            var responseHttp = await repository.Post("api/follow", stateBook);
+            if (responseHttp.Error)
+            {
+                showMessages.ShowWarningMessage("No se ha procesado su clasificacion");
+            }
+            else
+            {
+                showMessages.ShowSuccessMessage("Su clasificacion ha sido recibida!");
+            }
+        }
         else
         {
-            showMessages.ShowSuccessMessage("Su clasificacion ha sido recibida!");
+            showMessages.ShowWarningMessage("Para usar esta funcionalidad, debe logearse.");
         }
     }
 
@@ -110,7 +137,7 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        
+
         //Include token in request to get Votes
         if (user.Identity.IsAuthenticated)
         {
@@ -131,6 +158,24 @@ else
             else
             {
                 model = responseHttp.Response;
+                markChap = model.Mark;
+            }
+
+            if (model.BookState == "Leido")
+            {
+                Default1 = true;
+            }
+            if (model.BookState == "Pendiente")
+            {
+                Default2 = true;
+            }
+            if (model.BookState == "Siguiendo")
+            {
+                Default3 = true;
+            }
+            if (model.BookState == "Abandonado")
+            {
+                Default4 = true;
             }
         }
         else

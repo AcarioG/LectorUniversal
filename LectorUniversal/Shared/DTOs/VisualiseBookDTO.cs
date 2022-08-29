@@ -9,6 +9,7 @@ namespace LectorUniversal.Shared.DTOs
         public List<Gender>? Genders { get; set; }
         public List<Pages>? Pages { get; set; }
         public string BookState { get; set; } = string.Empty;
+        public int Mark { get; set; }
         public int UserVote { get; set; }
         public double AverageVote { get; set; }
     }
