@@ -1,4 +1,4 @@
-﻿@page "/chapters/viewer/{Id:int}"
+﻿@page "/chapters/viewer/{BookId:int}/{PositionId:int}/{Id:int}"
 @inject IRepository repository
 @inject IShowMessages showMessage
 @inject IJSRuntime _js
@@ -12,7 +12,7 @@
     
     <MudContainer  Class="d-flex flex-column col-12 col-sm-12 col-lg-9">
         <div class="d-inline-flex flex-row text-black justify-content-center">
-            <MudText Typo="Typo.h4">@model.Book.Name | @model.Chapters.Select(x => x.Title).FirstOrDefault()</MudText>
+            <MudText Typo="Typo.h4">@model.Select(x => x.Books.Name).FirstOrDefault() | @model.Select(x => x.Title).FirstOrDefault()</MudText>
 </div>
         <MudStack Spacing="1" class="justify-content-center" style="margin-left:20px;" >
         @foreach (var item in ChapterPages)
@@ -24,23 +24,36 @@
         <Pagination ></Pagination>
     <DisqusComments/>
     </MudContainer>
-     
-}else
+}
+else
 {
     <text>no hay registros</text>
 }
 
 @code {
     [Parameter] public int Id { get; set; }
-    VisualiseBookDTO? model;
+    [Parameter] public int BookId { get; set; }
+    [Parameter] public int PositionId { get; set; }
+    List<Chapter>? model;
     List<Pages>? ChapterPages;
     private bool MostrarForm { get; set; } = false;
-    private string previous { get; set; }
-    private string next { get; set; }
+    private int ActualPage = 1;
+    private int MaxPages;
 
     protected async override Task OnInitializedAsync()
     {
-        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/chapters/viewer/{Id}", includeToken:false);
+        await LoadChapters(PositionId);
+    }
+
+    private async Task ChapterSelected(int page)
+    {
+        ActualPage = page;
+        await LoadChapters(page);
+    }
+
+    private async Task  LoadChapters(int chapter)
+    {
+        var responseHttp = await repository.Get<List<Chapter>>($"api/chapters/viewer/{BookId}/{Id}", includeToken:false);
 
         if (responseHttp.Error)
         {
@@ -56,16 +69,11 @@
         else
         {
             model = responseHttp.Response;
-            ChapterPages = model.Pages;
-
+            ChapterPages = model.Select(x => x.ChapterPages).First().ToList();
             StateHasChanged();
             MostrarForm = true;
         }
     }
 
-    //private void Previous()
-    //{
-    //    previous = $"/chapters/viewer/{model.Chapters.OrderByDescending(x => x.Id).Where(w => w.Id < Id)}";
-    //    navigationManager.NavigateTo($"{previous}");
-    //}
+    
 }

@@ -3,27 +3,28 @@
 
 <MudPaper Outlined="true" Elevation="0" Class="col-lg-8" >
     <MudList Clickable="true" Class="d-flex flex-column" >
-    @foreach (var item in model.Chapters)
+        @foreach (var item in model.Chapters)
     {
-        <div class="d-inline-flex">
-             <div class="flex-column col-10 col-sm-10 col-md-11 col-lg-11">
-                <MudListItem Text="@item.Title" Dense="true">
-                    <NestedList>
-                            <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None"  >
-                                <MudListItem Text="@item.Title"  />
-                            </MudLink>
-                    </NestedList>
-                </MudListItem>
+            @*<p class="invisible">@(PositionChapter++)</p>*@
+            <div class="d-inline-flex">
+                 <div class="flex-column col-10 col-sm-10 col-md-11 col-lg-11">
+                    <MudListItem Text="@item.Title" Dense="true">
+                        <NestedList>
+                                <MudLink Href="@($"chapters/viewer/{item.BooksId}/{PositionChapter+1}/{item.Id}")" Underline="Underline.None"  >
+                                    <MudListItem Text="@item.Title"  />
+                                </MudLink>
+                        </NestedList>
+                    </MudListItem>
+                 </div>
+                <div class="flex-column">
+                    @*<MudRating MaxValue="1" SelectedValue="ChapterSelected" SelectedValueChanged="onclickHandle2" FullIcon="@Icons.Material.Filled.Visibility" EmptyIcon="@Icons.Material.Filled.VisibilityOff" />*@
+                    <AuthorizeView Roles="admin">
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                            @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Small">
+                        </MudIconButton>
+                    </AuthorizeView>
+                </div>
             </div>
-            <div class="flex-column">
-                @*<MudRating MaxValue="1" SelectedValue="ChapterSelected" SelectedValueChanged="onclickHandle2" FullIcon="@Icons.Material.Filled.Visibility" EmptyIcon="@Icons.Material.Filled.VisibilityOff" />*@
-                <AuthorizeView Roles="admin">
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                        @onclick="(() => DeleteChapter.InvokeAsync(item))" Size="Size.Small">
-                    </MudIconButton>
-                </AuthorizeView>
-            </div>
-        </div>
        <MudDivider DividerType="DividerType.FullWidth" />
     }
     </MudList>
@@ -35,6 +36,7 @@
     [Parameter] public int ChapterSelected { get; set; }
     [Parameter] public EventCallback<int> OnMark { get; set; }
     [CascadingParameter] public Task<AuthenticationState> authenticationState { get; set; }
+    private int PositionChapter = 0;
 
     private async Task onclickHandle(int mark)
     {

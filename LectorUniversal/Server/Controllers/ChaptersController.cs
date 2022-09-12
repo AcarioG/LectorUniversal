@@ -35,30 +35,30 @@ namespace LectorUniversal.Server.Controllers
             return Ok(chapters);
         }
 
-        [HttpGet("viewer/{id}")]
+        [HttpGet("viewer/{idbook}/{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<VisualiseBookDTO>> Get(int id)
+        public async Task<ActionResult<List<Chapter>>> Get(int id, int idbook)
         {
-            List<Chapter> chapter = new List<Chapter>();
+            //List<Chapter> chapter = new List<Chapter>();
                 
-            chapter.Add(await _db.Chapters.Where(x => x.Id == id)
-            .Include(b => b.Books)
+            var chapter = await _db.Chapters
+            .Include(b => b.Books).Where(x => x.BooksId == idbook)
             .Include(p => p.ChapterPages.Where(x => x.Chapter.Id == id))
-            .FirstOrDefaultAsync());
+            .ToListAsync();
 
             if (chapter == null)
             {
                 return NotFound();
             }
 
-            var model = new VisualiseBookDTO();
+            //var model = new VisualiseBookDTO();
 
-            model.Chapters = chapter;
-            model.Book = chapter.Select(x => x.Books).FirstOrDefault();
-            model.Pages = chapter.Select(x => x.ChapterPages).First().ToList();
-            //model.Genders = chapter.Select(x => x.Books.Genders.Select(x => x.Gender).ToList());
+            //model.Chapters = chapter;
+            //model.Book = chapter.Select(x => x.Books).FirstOrDefault();
+            //model.Pages = chapter.Select(x => x.ChapterPages).First().ToList();
+            ////model.Genders = chapter.Select(x => x.Books.Genders.Select(x => x.Gender).ToList());
 
-            return model;
+            return chapter;
         }
 
         [HttpPost("mark")]

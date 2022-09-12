@@ -14,7 +14,6 @@
 @code {
     [Parameter] public int ActualPage { get; set; } = 1;
     [Parameter] public int MaxPages { get; set; }
-    [Parameter] public int Radio { get; set; } = 3;
     [Parameter] public EventCallback<int> PageSelected { get; set; }
     List<PaginationModel> Links = new List<PaginationModel>();
 
@@ -31,7 +30,6 @@
         }
 
         await PageSelected.InvokeAsync(pagination.Page);
-        StateHasChanged();
     }
 
     protected override void OnParametersSet()
@@ -42,13 +40,13 @@
         var previousLink = ActualPage - 1;
         Links.Add(new PaginationModel(previousLink, previousLinkEnable, "Anterior"));
 
-        for (var i = 1; i < MaxPages; i++)
-        {
-            if (i >= ActualPage - Radio && i <= ActualPage + Radio)
-            {
-                Links.Add(new PaginationModel(i){ Active = ActualPage == i });
-            }
-        }
+        //for (var i = 1; i < MaxPages; i++)
+        //{
+        //    if (i >= ActualPage - Radio && i <= ActualPage + Radio)
+        //    {
+        //        Links.Add(new PaginationModel(i){ Active = ActualPage == i });
+        //    }
+        //}
 
         var nextLinkEnable = ActualPage != MaxPages;
         var nextLink = ActualPage + 1;
