@@ -1,18 +1,14 @@
-﻿@page "/chapters/viewer/{BookId:int}/{PositionId:int}/{Id:int}"
+﻿@page "/chapters/viewer/{Id:int}"
 @inject IRepository repository
 @inject IShowMessages showMessage
-@inject IJSRuntime _js
 @inject NavigationManager navigationManager
-
-
-
+@inject IJSRuntime _js
 
 @if (@MostrarForm != false)
 {
-    
     <MudContainer  Class="d-flex flex-column col-12 col-sm-12 col-lg-9">
         <div class="d-inline-flex flex-row text-black justify-content-center">
-            <MudText Typo="Typo.h4">@model.Select(x => x.Books.Name).FirstOrDefault() | @model.Select(x => x.Title).FirstOrDefault()</MudText>
+            <MudText Typo="Typo.h4">@model.Book.Name | @model.Chapters.Select(x => x.Title).FirstOrDefault()</MudText>
 </div>
         <MudStack Spacing="1" class="justify-content-center" style="margin-left:20px;" >
         @foreach (var item in ChapterPages)
@@ -20,10 +16,10 @@
             <MudImage Src="@item.ImageUrl"  />
         }
         </MudStack>
-        @*<button class="btn btn-success" @onclick="Previous"></button>*@
         <Pagination ></Pagination>
     <DisqusComments/>
     </MudContainer>
+     
 }
 else
 {
@@ -33,47 +29,31 @@ else
 @code {
     [Parameter] public int Id { get; set; }
     [Parameter] public int BookId { get; set; }
-    [Parameter] public int PositionId { get; set; }
-    List<Chapter>? model;
+    VisualiseBookDTO? model;
     List<Pages>? ChapterPages;
     private bool MostrarForm { get; set; } = false;
-    private int ActualPage = 1;
-    private int MaxPages;
 
     protected async override Task OnInitializedAsync()
     {
-        await LoadChapters(PositionId);
-    }
-
-    private async Task ChapterSelected(int page)
-    {
-        ActualPage = page;
-        await LoadChapters(page);
-    }
-
-    private async Task  LoadChapters(int chapter)
-    {
-        var responseHttp = await repository.Get<List<Chapter>>($"api/chapters/viewer/{BookId}/{Id}", includeToken:false);
+        var responseHttp = await repository.Get<VisualiseBookDTO>($"api/chapters/viewer/{Id}", includeToken:false);
 
         if (responseHttp.Error)
         {
-            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                navigationManager.NavigateTo("books");
-            }
-            else
-            {
-                await showMessage.ShowErrorMessage(await responseHttp.GetBody());
-            }
+             if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+             {
+                  navigationManager.NavigateTo("books");
+             }
+             else
+             {
+                  await showMessage.ShowErrorMessage(await responseHttp.GetBody());
+             }
         }
         else
         {
             model = responseHttp.Response;
-            ChapterPages = model.Select(x => x.ChapterPages).First().ToList();
-            StateHasChanged();
+            ChapterPages = model.Pages;
+                StateHasChanged();
             MostrarForm = true;
         }
     }
-
-    
 }

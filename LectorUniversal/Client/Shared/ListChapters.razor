@@ -10,7 +10,7 @@
                  <div class="flex-column col-10 col-sm-10 col-md-11 col-lg-11">
                     <MudListItem Text="@item.Title" Dense="true">
                         <NestedList>
-                                <MudLink Href="@($"chapters/viewer/{item.BooksId}/{PositionChapter+1}/{item.Id}")" Underline="Underline.None"  >
+                                <MudLink Href="@($"chapters/viewer/{item.Id}")" Underline="Underline.None"  >
                                     <MudListItem Text="@item.Title"  />
                                 </MudLink>
                         </NestedList>
